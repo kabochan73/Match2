@@ -26,7 +26,7 @@ erDiagram
         string phone_number
         string prefecture
         string address_line
-        string stripe_customer_id
+        string stripe_id
     }
     USERS {
         bigint id PK
@@ -124,7 +124,7 @@ erDiagram
 | phone_number | string | nullable | |
 | prefecture | string | nullable | 所在地(都道府県) |
 | address_line | string | nullable | 所在地(市区町村以下) |
-| stripe_customer_id | string | nullable, unique | Stripe顧客ID(Cashier用) |
+| stripe_id | string | nullable, unique | Stripe顧客ID。カラム名はCashierの`Billable`トレイトが内部で決め打ち参照するため(Webhookでの顧客検索`findBillable`等)、Cashier標準の`stripe_id`に合わせる |
 | created_at / updated_at | timestamp | | |
 
 所在地は検索・絞り込みには使わない(job_postings.prefectureとは無関係)ため、`prefecture`と`address_line`を分けるのは表示上の整形のためのみ。Webサイトは要件に明記がないため今回は含めない(「6. 未決事項」参照)。
