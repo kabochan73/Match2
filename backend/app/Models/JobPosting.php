@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\EmploymentType;
+use App\Enums\JobPostingStatus;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
+#[Fillable([
+    'title',
+    'description',
+    'desired_candidate',
+    'employment_type',
+    'prefecture',
+    'salary_min',
+    'salary_max',
+    'status',
+    'published_at',
+])]
+class JobPosting extends Model
+{
+    use HasFactory;
+
+    protected function casts(): array
+    {
+        return [
+            'employment_type' => EmploymentType::class,
+            'status' => JobPostingStatus::class,
+            'published_at' => 'datetime',
+        ];
+    }
+
+    /**
+     * @return BelongsTo<Company, $this>
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * @return HasMany<Application, $this>
+     */
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class);
+    }
+
+    /**
+     * @return HasOne<JobPostingSubscription, $this>
+     */
+    public function subscription(): HasOne
+    {
+        return $this->hasOne(JobPostingSubscription::class);
+    }
+}
