@@ -6,11 +6,13 @@ use App\Http\Controllers\Auth\Users\AuthController as UserAuthController;
 use App\Http\Controllers\Auth\Users\PasswordResetController as UserPasswordResetController;
 use App\Http\Controllers\Companies\ApplicationController as CompanyApplicationController;
 use App\Http\Controllers\Companies\JobPostingController as CompanyJobPostingController;
+use App\Http\Controllers\Companies\MessageController as CompanyMessageController;
 use App\Http\Controllers\Companies\ProfileController as CompanyProfileController;
 use App\Http\Controllers\JobPostingController;
 use App\Http\Controllers\Users\ApplicationController as UserApplicationController;
 use App\Http\Controllers\Users\CertificationController;
 use App\Http\Controllers\Users\EducationController;
+use App\Http\Controllers\Users\MessageController as UserMessageController;
 use App\Http\Controllers\Users\ProfileController as UserProfileController;
 use App\Http\Controllers\Users\WorkExperienceController;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +43,9 @@ Route::prefix('users')->name('users.')->group(function () {
 
         Route::apiResource('applications', UserApplicationController::class)
             ->only(['index', 'show', 'store']);
+
+        Route::get('applications/{application}/messages', [UserMessageController::class, 'index'])->name('applications.messages.index');
+        Route::post('applications/{application}/messages', [UserMessageController::class, 'store'])->name('applications.messages.store');
     });
 });
 
@@ -65,5 +70,8 @@ Route::prefix('companies')->name('companies.')->group(function () {
         Route::apiResource('applications', CompanyApplicationController::class)
             ->only(['index', 'show']);
         Route::patch('applications/{application}/match', [CompanyApplicationController::class, 'match'])->name('applications.match');
+
+        Route::get('applications/{application}/messages', [CompanyMessageController::class, 'index'])->name('applications.messages.index');
+        Route::post('applications/{application}/messages', [CompanyMessageController::class, 'store'])->name('applications.messages.store');
     });
 });
