@@ -54,10 +54,10 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany<Application, $this>
+     * @return HasMany<Like, $this>
      */
-    public function applications(): HasMany
+    public function likes(): HasMany
     {
-        return $this->hasMany(Application::class);
+        return $this->hasMany(Like::class);
     }
 }

@@ -10,14 +10,14 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('application_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('like_id')->constrained()->cascadeOnDelete();
             $table->string('sender_type');
             $table->unsignedBigInteger('sender_id');
             $table->text('body');
             $table->timestamp('read_at')->nullable();
             $table->timestamp('created_at')->useCurrent();
 
-            $table->index(['application_id', 'created_at']);
+            $table->index(['like_id', 'created_at']);
         });
     }
 

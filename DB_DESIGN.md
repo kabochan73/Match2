@@ -12,9 +12,9 @@ erDiagram
     USERS ||--o{ WORK_EXPERIENCES : "has"
     USERS ||--o{ EDUCATIONS : "has"
     USERS ||--o{ CERTIFICATIONS : "has"
-    USERS ||--o{ APPLICATIONS : "applies (=likes)"
-    JOB_POSTINGS ||--o{ APPLICATIONS : "receives"
-    APPLICATIONS ||--o{ MESSAGES : "has thread"
+    USERS ||--o{ LIKES : "applies (=likes)"
+    JOB_POSTINGS ||--o{ LIKES : "receives"
+    LIKES ||--o{ MESSAGES : "has thread"
     JOB_POSTINGS ||--o| JOB_POSTING_SUBSCRIPTIONS : "billed as"
     JOB_POSTING_SUBSCRIPTIONS ||--o{ PAYMENTS : "invoices"
 
@@ -65,18 +65,19 @@ erDiagram
         bigint user_id FK
         string name
     }
-    APPLICATIONS {
+    LIKES {
         bigint id PK
         bigint user_id FK
         bigint job_posting_id FK
         string like_type
+        text motivation
         string status
         timestamp applied_at
         timestamp response_deadline
     }
     MESSAGES {
         bigint id PK
-        bigint application_id FK
+        bigint like_id FK
         string sender_type
         bigint sender_id
         text body
@@ -185,8 +186,8 @@ erDiagram
 
 検索の絞り込み対象は「キーワード(`title`/`description`) + `prefecture` + `employment_type`」の3つのみ(要件4.2)。`salary_min`/`salary_max`は表示専用。
 
-### applications(応募 = 求職者からの「いいね」)
-求職者が求人に「いいね」した時点でレコードが作成される。「いいね」は求職者の応募意思そのものであり、`likes`という別テーブルは持たない。
+### likes(応募 = 求職者からの「いいね」)
+求職者が求人に「いいね」した時点でレコードが作成される。「いいね」は求職者の応募意思そのものであり、応募(いいね)とは別に`applications`のような独立したテーブルは持たない。テーブル名は「いいね」という操作起点の呼び名を採用している。
 
 | カラム | 型 | 制約 | 備考 |
 |---|---|---|---|
@@ -210,13 +211,13 @@ erDiagram
 
 マッチ成立後の選考プロセス(書類選考・面接・内定など)はステータスとして管理しない(要件4.2「選考ステータス管理機能は設けない」)。そのためステータス変更履歴テーブルは持たない。
 
-**月間上限(通常10件/スーパー1件、月初リセット)の数え方**: 専用のカウンタテーブルは設けず、`applications`を`user_id` + `like_type` + `applied_at`(当月分)でカウントするクエリで判定する。カウンタを別テーブルで持つと応募の取消等が発生した際に同期ズレのリスクがあるため、都度集計する方針とする。
+**月間上限(通常10件/スーパー1件、月初リセット)の数え方**: 専用のカウンタテーブルは設けず、`likes`を`user_id` + `like_type` + `applied_at`(当月分)でカウントするクエリで判定する。カウンタを別テーブルで持つと応募の取消等が発生した際に同期ズレのリスクがあるため、都度集計する方針とする。
 
 ### messages(応募単位のメッセージスレッド)
 | カラム | 型 | 制約 | 備考 |
 |---|---|---|---|
 | id | bigint | PK | |
-| application_id | bigint FK → applications.id | not null | |
+| like_id | bigint FK → likes.id | not null | |
 | sender_type | string | not null | `user` / `company` |
 | sender_id | bigint | not null | |
 | body | text | not null | |
@@ -272,9 +273,9 @@ erDiagram
 ## 3. インデックス方針
 
 - `job_postings(status, prefecture, employment_type)`(検索の絞り込み)
-- `applications(user_id, like_type, applied_at)`(月間上限のカウント用)
-- `applications(job_posting_id)`
-- `messages(application_id, created_at)`
+- `likes(user_id, like_type, applied_at)`(月間上限のカウント用)
+- `likes(job_posting_id)`
+- `messages(like_id, created_at)`
 - `work_experiences(user_id)`
 - `educations(user_id)`
 - `certifications(user_id)`
@@ -285,7 +286,7 @@ erDiagram
 - **メッセージの送信者**: `messages.sender_type` / `sender_id` は簡易ポリモーフィック。Eloquentの`morphTo`を使用してもよい。
 - **課金と公開状態の連動**: `job_postings.status` はバッチ処理(Laravel Scheduler)や Stripe Webhook(`invoice.payment_failed` 等)から更新する。`job_posting_subscriptions.status` がStripe側の実体、`job_postings.status` はアプリの表示制御用という役割分担。
 - **Laravel Cashierとの関係**: 決済はLaravel Cashierで実装する。Cashierは`Billable`トレイトを持つモデル(=`Company`)を1 Stripe顧客として扱い、`name`(サブスクリプションの識別名)を分けることで1顧客が複数サブスクリプションを持てる。求人ごとの課金は `name = "job_posting:{job_posting_id}"` のようなサブスクリプション名で管理し、Cashier標準の`subscriptions`/`subscription_items`テーブルを実体として使う。`job_posting_subscriptions`テーブルは、その中のどのCashierサブスクリプションがどの求人に対応するかを紐付け、アプリ側の検索・表示用に非正規化した薄いラッパーという位置づけ。
-- **マッチ失効バッチ**: Laravel Schedulerで定期的に `applications` を走査し、`status = applied` かつ `response_deadline` を過ぎているレコードを `status = expired` に更新する。
+- **マッチ失効バッチ**: Laravel Schedulerで定期的に `likes` を走査し、`status = applied` かつ `response_deadline` を過ぎているレコードを `status = expired` に更新する(`likes:expire`コマンド、1時間おき)。
 - **支払い方法の登録タイミング**: 求人投稿時にカード登録は必須にしない。無料期間中(`trial_ends_at`まで)は`stripe_subscription_id`が未設定のまま`status = trialing`で公開できる。期限が近づいたら`notifications`でリマインドし、`trial_ends_at`時点でカード未登録・決済失敗なら`job_posting_subscriptions.status = unpaid`、`job_postings.status = unpublished`にバッチ/Webhookで更新する。
 
 ## 5. 前バージョンからの変更点

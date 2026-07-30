@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
-use App\Models\Application;
+use App\Models\Like;
 use App\Models\Message;
 use App\Services\MessageService;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,23 +17,23 @@ class MessageController extends Controller
     /**
      * @return Collection<int, Message>
      */
-    public function index(Request $request, Application $application, MessageService $service): Collection
+    public function index(Request $request, Like $like, MessageService $service): Collection
     {
-        $this->authorize('view', $application);
+        $this->authorize('view', $like);
 
-        $service->markAsRead($application, $request->user());
+        $service->markAsRead($like, $request->user());
 
-        return $application->messages()->orderBy('created_at')->get();
+        return $like->messages()->orderBy('created_at')->get();
     }
 
-    public function store(Request $request, Application $application, MessageService $service): Message
+    public function store(Request $request, Like $like, MessageService $service): Message
     {
-        $this->authorize('view', $application);
+        $this->authorize('view', $like);
 
         $validated = $request->validate([
             'body' => ['required', 'string'],
         ]);
 
-        return $service->send($application, $request->user(), $validated['body']);
+        return $service->send($like, $request->user(), $validated['body']);
     }
 }

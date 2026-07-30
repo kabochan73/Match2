@@ -4,14 +4,14 @@ use App\Http\Controllers\Auth\Companies\AuthController as CompanyAuthController;
 use App\Http\Controllers\Auth\Companies\PasswordResetController as CompanyPasswordResetController;
 use App\Http\Controllers\Auth\Users\AuthController as UserAuthController;
 use App\Http\Controllers\Auth\Users\PasswordResetController as UserPasswordResetController;
-use App\Http\Controllers\Companies\ApplicationController as CompanyApplicationController;
 use App\Http\Controllers\Companies\JobPostingController as CompanyJobPostingController;
+use App\Http\Controllers\Companies\LikeController as CompanyLikeController;
 use App\Http\Controllers\Companies\MessageController as CompanyMessageController;
 use App\Http\Controllers\Companies\ProfileController as CompanyProfileController;
 use App\Http\Controllers\JobPostingController;
-use App\Http\Controllers\Users\ApplicationController as UserApplicationController;
 use App\Http\Controllers\Users\CertificationController;
 use App\Http\Controllers\Users\EducationController;
+use App\Http\Controllers\Users\LikeController as UserLikeController;
 use App\Http\Controllers\Users\MessageController as UserMessageController;
 use App\Http\Controllers\Users\ProfileController as UserProfileController;
 use App\Http\Controllers\Users\WorkExperienceController;
@@ -41,11 +41,11 @@ Route::prefix('users')->name('users.')->group(function () {
         Route::apiResource('certifications', CertificationController::class)
             ->only(['index', 'store', 'update', 'destroy']);
 
-        Route::apiResource('applications', UserApplicationController::class)
+        Route::apiResource('likes', UserLikeController::class)
             ->only(['index', 'show', 'store']);
 
-        Route::get('applications/{application}/messages', [UserMessageController::class, 'index'])->name('applications.messages.index');
-        Route::post('applications/{application}/messages', [UserMessageController::class, 'store'])->name('applications.messages.store');
+        Route::get('likes/{like}/messages', [UserMessageController::class, 'index'])->name('likes.messages.index');
+        Route::post('likes/{like}/messages', [UserMessageController::class, 'store'])->name('likes.messages.store');
     });
 });
 
@@ -67,11 +67,11 @@ Route::prefix('companies')->name('companies.')->group(function () {
         Route::patch('job-postings/{jobPosting}/publish', [CompanyJobPostingController::class, 'publish'])->name('job-postings.publish');
         Route::patch('job-postings/{jobPosting}/close', [CompanyJobPostingController::class, 'close'])->name('job-postings.close');
 
-        Route::apiResource('applications', CompanyApplicationController::class)
+        Route::apiResource('likes', CompanyLikeController::class)
             ->only(['index', 'show']);
-        Route::patch('applications/{application}/match', [CompanyApplicationController::class, 'match'])->name('applications.match');
+        Route::patch('likes/{like}/match', [CompanyLikeController::class, 'match'])->name('likes.match');
 
-        Route::get('applications/{application}/messages', [CompanyMessageController::class, 'index'])->name('applications.messages.index');
-        Route::post('applications/{application}/messages', [CompanyMessageController::class, 'store'])->name('applications.messages.store');
+        Route::get('likes/{like}/messages', [CompanyMessageController::class, 'index'])->name('likes.messages.index');
+        Route::post('likes/{like}/messages', [CompanyMessageController::class, 'store'])->name('likes.messages.store');
     });
 });

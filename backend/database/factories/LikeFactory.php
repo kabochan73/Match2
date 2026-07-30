@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Enums\ApplicationStatus;
+use App\Enums\LikeStatus;
 use App\Enums\LikeType;
-use App\Models\Application;
 use App\Models\JobPosting;
+use App\Models\Like;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Application>
+ * @extends Factory<Like>
  */
-class ApplicationFactory extends Factory
+class LikeFactory extends Factory
 {
     /**
      * @return array<string, mixed>
@@ -26,7 +26,7 @@ class ApplicationFactory extends Factory
             'job_posting_id' => JobPosting::factory(),
             'like_type' => LikeType::Standard,
             'motivation' => fake()->text(200),
-            'status' => ApplicationStatus::Applied,
+            'status' => LikeStatus::Applied,
             'applied_at' => $appliedAt,
             'response_deadline' => $appliedAt->copy()->addDays(7),
         ];
@@ -40,7 +40,7 @@ class ApplicationFactory extends Factory
     public function matched(): static
     {
         return $this->state([
-            'status' => ApplicationStatus::Matched,
+            'status' => LikeStatus::Matched,
             'company_responded_at' => now(),
         ]);
     }

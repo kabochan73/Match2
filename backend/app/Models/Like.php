@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\ApplicationStatus;
+use App\Enums\LikeStatus;
 use App\Enums\LikeType;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['job_posting_id', 'like_type', 'motivation', 'status', 'applied_at', 'response_deadline', 'company_responded_at'])]
-class Application extends Model
+class Like extends Model
 {
     use HasFactory;
 
@@ -19,7 +19,7 @@ class Application extends Model
     {
         return [
             'like_type' => LikeType::class,
-            'status' => ApplicationStatus::class,
+            'status' => LikeStatus::class,
             'applied_at' => 'datetime',
             'response_deadline' => 'datetime',
             'company_responded_at' => 'datetime',

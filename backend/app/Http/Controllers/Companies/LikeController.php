@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\Companies;
 
 use App\Http\Controllers\Controller;
-use App\Models\Application;
-use App\Services\ApplicationService;
+use App\Models\Like;
+use App\Services\LikeService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
-class ApplicationController extends Controller
+class LikeController extends Controller
 {
     use AuthorizesRequests;
 
     /**
-     * @return Collection<int, Application>
+     * @return Collection<int, Like>
      */
     public function index(Request $request): Collection
     {
@@ -22,24 +22,24 @@ class ApplicationController extends Controller
             'job_posting_id' => ['nullable', 'integer'],
         ]);
 
-        return Application::query()
+        return Like::query()
             ->whereHas('jobPosting', fn ($query) => $query->where('company_id', $request->user()->id))
             ->when($validated['job_posting_id'] ?? null, fn ($query, $jobPostingId) => $query->where('job_posting_id', $jobPostingId))
             ->with('user')
             ->get();
     }
 
-    public function show(Application $application): Application
+    public function show(Like $like): Like
     {
-        $this->authorize('viewAsCompany', $application);
+        $this->authorize('viewAsCompany', $like);
 
-        return $application->load(['user.workExperiences', 'user.educations', 'user.certifications']);
+        return $like->load(['user.workExperiences', 'user.educations', 'user.certifications']);
     }
 
-    public function match(Application $application, ApplicationService $service): Application
+    public function match(Like $like, LikeService $service): Like
     {
-        $this->authorize('match', $application);
+        $this->authorize('match', $like);
 
-        return $service->match($application);
+        return $service->match($like);
     }
 }

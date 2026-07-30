@@ -1,54 +1,54 @@
 <?php
 
-use App\Models\Application;
 use App\Models\Company;
 use App\Models\JobPosting;
+use App\Models\Like;
 
-it('sends a message on a matched application', function () {
+it('sends a message on a matched like', function () {
     $company = Company::factory()->create();
     $jobPosting = JobPosting::factory()->for($company)->create();
-    $application = Application::factory()->matched()->for($jobPosting)->create();
+    $like = Like::factory()->matched()->for($jobPosting)->create();
 
     $this->actingAs($company, 'companies')
-        ->postJson("/api/companies/applications/{$application->id}/messages", ['body' => 'ご応募ありがとうございます'])
+        ->postJson("/api/companies/likes/{$like->id}/messages", ['body' => 'ご応募ありがとうございます'])
         ->assertCreated()
         ->assertJsonPath('sender_type', 'company');
 });
 
-it('rejects sending a message on a non-matched application', function () {
+it('rejects sending a message on a non-matched like', function () {
     $company = Company::factory()->create();
     $jobPosting = JobPosting::factory()->for($company)->create();
-    $application = Application::factory()->for($jobPosting)->create();
+    $like = Like::factory()->for($jobPosting)->create();
 
     $this->actingAs($company, 'companies')
-        ->postJson("/api/companies/applications/{$application->id}/messages", ['body' => 'こんにちは'])
+        ->postJson("/api/companies/likes/{$like->id}/messages", ['body' => 'こんにちは'])
         ->assertUnprocessable();
 });
 
-it('forbids sending a message on another company\'s job posting application', function () {
+it('forbids sending a message on another company\'s job posting like', function () {
     $owner = Company::factory()->create();
     $intruder = Company::factory()->create();
     $jobPosting = JobPosting::factory()->for($owner)->create();
-    $application = Application::factory()->matched()->for($jobPosting)->create();
+    $like = Like::factory()->matched()->for($jobPosting)->create();
 
     $this->actingAs($intruder, 'companies')
-        ->postJson("/api/companies/applications/{$application->id}/messages", ['body' => 'なりすまし'])
+        ->postJson("/api/companies/likes/{$like->id}/messages", ['body' => 'なりすまし'])
         ->assertForbidden();
 });
 
 it('marks the user\'s messages as read when the company views the thread', function () {
     $company = Company::factory()->create();
     $jobPosting = JobPosting::factory()->for($company)->create();
-    $application = Application::factory()->matched()->for($jobPosting)->create();
+    $like = Like::factory()->matched()->for($jobPosting)->create();
 
-    $userMessage = $application->messages()->create([
+    $userMessage = $like->messages()->create([
         'sender_type' => 'user',
-        'sender_id' => $application->user_id,
+        'sender_id' => $like->user_id,
         'body' => 'メッセージ',
     ]);
 
     $this->actingAs($company, 'companies')
-        ->getJson("/api/companies/applications/{$application->id}/messages")
+        ->getJson("/api/companies/likes/{$like->id}/messages")
         ->assertOk()
         ->assertJsonCount(1);
 

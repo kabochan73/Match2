@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Enums\ApplicationStatus;
 use App\Enums\JobPostingStatus;
+use App\Enums\LikeStatus;
 use App\Enums\LikeType;
-use App\Models\Application;
 use App\Models\JobPosting;
+use App\Models\Like;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 
-class ApplicationService
+class LikeService
 {
     private const STANDARD_MONTHLY_LIMIT = 10;
 
     private const SUPER_MONTHLY_LIMIT = 1;
 
-    public function apply(User $user, JobPosting $jobPosting, LikeType $likeType, string $motivation): Application
+    public function apply(User $user, JobPosting $jobPosting, LikeType $likeType, string $motivation): Like
     {
         if ($jobPosting->status !== JobPostingStatus::Published) {
             throw ValidationException::withMessages([
@@ -24,7 +24,7 @@ class ApplicationService
             ]);
         }
 
-        if ($user->applications()->where('job_posting_id', $jobPosting->id)->exists()) {
+        if ($user->likes()->where('job_posting_id', $jobPosting->id)->exists()) {
             throw ValidationException::withMessages([
                 'job_posting_id' => 'この求人にはすでに応募済みです。',
             ]);
@@ -32,7 +32,7 @@ class ApplicationService
 
         $limit = $likeType === LikeType::Super ? self::SUPER_MONTHLY_LIMIT : self::STANDARD_MONTHLY_LIMIT;
 
-        $monthlyCount = $user->applications()
+        $monthlyCount = $user->likes()
             ->where('like_type', $likeType)
             ->whereBetween('applied_at', [now()->startOfMonth(), now()->endOfMonth()])
             ->count();
@@ -45,43 +45,43 @@ class ApplicationService
             ]);
         }
 
-        return $user->applications()->create([
+        return $user->likes()->create([
             'job_posting_id' => $jobPosting->id,
             'like_type' => $likeType,
             'motivation' => $motivation,
-            'status' => ApplicationStatus::Applied,
+            'status' => LikeStatus::Applied,
             'applied_at' => now(),
             'response_deadline' => now()->addDays(7),
         ]);
     }
 
-    public function match(Application $application): Application
+    public function match(Like $like): Like
     {
-        if ($application->status !== ApplicationStatus::Applied) {
+        if ($like->status !== LikeStatus::Applied) {
             throw ValidationException::withMessages([
                 'status' => 'すでに反応済み、または対象外の応募です。',
             ]);
         }
 
-        if (now()->greaterThan($application->response_deadline)) {
+        if (now()->greaterThan($like->response_deadline)) {
             throw ValidationException::withMessages([
                 'status' => '反応期限(7日)を過ぎています。',
             ]);
         }
 
-        $application->update([
-            'status' => ApplicationStatus::Matched,
+        $like->update([
+            'status' => LikeStatus::Matched,
             'company_responded_at' => now(),
         ]);
 
-        return $application;
+        return $like;
     }
 
     public function expireOverdue(): int
     {
-        return Application::query()
-            ->where('status', ApplicationStatus::Applied)
+        return Like::query()
+            ->where('status', LikeStatus::Applied)
             ->where('response_deadline', '<', now())
-            ->update(['status' => ApplicationStatus::Expired]);
+            ->update(['status' => LikeStatus::Expired]);
     }
 }

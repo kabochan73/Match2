@@ -126,7 +126,7 @@
 - `certifications`(求職者の資格。資格名のみ。user_idに対して複数件)
 - `companies`(企業。1社1アカウントとしてログイン主体を兼ねる)
 - `job_postings`(求人。公開/非公開ステータスを含む)
-- `applications`(求職者の「いいね」= 応募。マッチ成立可否を含む)
+- `likes`(求職者の「いいね」= 応募。マッチ成立可否・志望動機を含む)
 - `messages`(応募単位でのメッセージスレッド。面接日程調整も含む)
 - `notifications`
 - `job_posting_subscriptions`(求人ごとのStripeサブスクリプション。trial_ends_at, stripe_subscription_id, status 等)

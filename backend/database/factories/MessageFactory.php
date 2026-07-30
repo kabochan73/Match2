@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Application;
+use App\Models\Like;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -18,7 +18,7 @@ class MessageFactory extends Factory
     public function definition(): array
     {
         return [
-            'application_id' => Application::factory(),
+            'like_id' => Like::factory(),
             'sender_type' => (new User)->getMorphClass(),
             'sender_id' => User::factory(),
             'body' => fake()->text(200),

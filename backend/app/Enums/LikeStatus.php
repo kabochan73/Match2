@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ApplicationStatus: string
+enum LikeStatus: string
 {
     case Applied = 'applied';
     case Matched = 'matched';

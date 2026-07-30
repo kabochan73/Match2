@@ -24,11 +24,11 @@ class Message extends Model
     }
 
     /**
-     * @return BelongsTo<Application, $this>
+     * @return BelongsTo<Like, $this>
      */
-    public function application(): BelongsTo
+    public function like(): BelongsTo
     {
-        return $this->belongsTo(Application::class);
+        return $this->belongsTo(Like::class);
     }
 
     /**

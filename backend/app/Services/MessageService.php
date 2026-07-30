@@ -2,35 +2,35 @@
 
 namespace App\Services;
 
-use App\Enums\ApplicationStatus;
-use App\Models\Application;
+use App\Enums\LikeStatus;
 use App\Models\Company;
+use App\Models\Like;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 
 class MessageService
 {
-    public function send(Application $application, User|Company $sender, string $body): Message
+    public function send(Like $like, User|Company $sender, string $body): Message
     {
-        if ($application->status !== ApplicationStatus::Matched) {
+        if ($like->status !== LikeStatus::Matched) {
             throw ValidationException::withMessages([
-                'application_id' => 'マッチが成立していない応募にはメッセージを送信できません。',
+                'like_id' => 'マッチが成立していない応募にはメッセージを送信できません。',
             ]);
         }
 
-        return $application->messages()->create([
+        return $like->messages()->create([
             'sender_type' => $sender->getMorphClass(),
             'sender_id' => $sender->id,
             'body' => $body,
         ]);
     }
 
-    public function markAsRead(Application $application, User|Company $reader): void
+    public function markAsRead(Like $like, User|Company $reader): void
     {
         $otherPartyType = $reader instanceof User ? Company::class : User::class;
 
-        $application->messages()
+        $like->messages()
             ->where('sender_type', (new $otherPartyType)->getMorphClass())
             ->whereNull('read_at')
             ->update(['read_at' => now()]);

@@ -4,34 +4,34 @@ namespace App\Http\Controllers\Users;
 
 use App\Enums\LikeType;
 use App\Http\Controllers\Controller;
-use App\Models\Application;
 use App\Models\JobPosting;
-use App\Services\ApplicationService;
+use App\Models\Like;
+use App\Services\LikeService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class ApplicationController extends Controller
+class LikeController extends Controller
 {
     use AuthorizesRequests;
 
     /**
-     * @return Collection<int, Application>
+     * @return Collection<int, Like>
      */
     public function index(Request $request): Collection
     {
-        return $request->user()->applications;
+        return $request->user()->likes;
     }
 
-    public function show(Application $application): Application
+    public function show(Like $like): Like
     {
-        $this->authorize('view', $application);
+        $this->authorize('view', $like);
 
-        return $application;
+        return $like;
     }
 
-    public function store(Request $request, ApplicationService $service): Application
+    public function store(Request $request, LikeService $service): Like
     {
         $validated = $request->validate([
             'job_posting_id' => ['required', 'integer', 'exists:job_postings,id'],
