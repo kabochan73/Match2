@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Companies;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CandidateProfileResource;
 use App\Models\Like;
 use App\Services\LikeService;
 use Illuminate\Database\Eloquent\Collection;
@@ -29,11 +30,13 @@ class LikeController extends Controller
             ->get();
     }
 
-    public function show(Like $like): Like
+    public function show(Like $like): CandidateProfileResource
     {
         $this->authorize('viewAsCompany', $like);
 
-        return $like->load(['user.workExperiences', 'user.educations', 'user.certifications']);
+        $like->load(['user.workExperiences', 'user.educations', 'user.certifications']);
+
+        return new CandidateProfileResource($like);
     }
 
     public function match(Like $like, LikeService $service): Like
