@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Like;
 use App\Models\Message;
 use App\Models\User;
+use App\Notifications\NewMessageReceived;
 use Illuminate\Validation\ValidationException;
 
 class MessageService
@@ -19,11 +20,16 @@ class MessageService
             ]);
         }
 
-        return $like->messages()->create([
+        $message = $like->messages()->create([
             'sender_type' => $sender->getMorphClass(),
             'sender_id' => $sender->id,
             'body' => $body,
         ]);
+
+        $recipient = $sender instanceof User ? $like->jobPosting->company : $like->user;
+        $recipient->notify(new NewMessageReceived($message));
+
+        return $message;
     }
 
     public function markAsRead(Like $like, User|Company $reader): void

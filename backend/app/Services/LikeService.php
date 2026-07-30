@@ -8,6 +8,9 @@ use App\Enums\LikeType;
 use App\Models\JobPosting;
 use App\Models\Like;
 use App\Models\User;
+use App\Notifications\LikeExpired;
+use App\Notifications\LikeMatched;
+use App\Notifications\NewLikeReceived;
 use Illuminate\Validation\ValidationException;
 
 class LikeService
@@ -45,7 +48,7 @@ class LikeService
             ]);
         }
 
-        return $user->likes()->create([
+        $like = $user->likes()->create([
             'job_posting_id' => $jobPosting->id,
             'like_type' => $likeType,
             'motivation' => $motivation,
@@ -53,6 +56,10 @@ class LikeService
             'applied_at' => now(),
             'response_deadline' => now()->addDays(7),
         ]);
+
+        $jobPosting->company->notify(new NewLikeReceived($like));
+
+        return $like;
     }
 
     public function match(Like $like): Like
@@ -74,14 +81,23 @@ class LikeService
             'company_responded_at' => now(),
         ]);
 
+        $like->user->notify(new LikeMatched($like));
+
         return $like;
     }
 
     public function expireOverdue(): int
     {
-        return Like::query()
+        $overdueLikes = Like::query()
             ->where('status', LikeStatus::Applied)
             ->where('response_deadline', '<', now())
-            ->update(['status' => LikeStatus::Expired]);
+            ->get();
+
+        foreach ($overdueLikes as $like) {
+            $like->update(['status' => LikeStatus::Expired]);
+            $like->user->notify(new LikeExpired($like));
+        }
+
+        return $overdueLikes->count();
     }
 }
