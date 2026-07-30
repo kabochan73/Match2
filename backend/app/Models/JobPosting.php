@@ -26,6 +26,10 @@ class JobPosting extends Model
 {
     use HasFactory;
 
+    protected $attributes = [
+        'status' => 'draft',
+    ];
+
     protected function casts(): array
     {
         return [

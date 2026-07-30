@@ -4,12 +4,17 @@ use App\Http\Controllers\Auth\Companies\AuthController as CompanyAuthController;
 use App\Http\Controllers\Auth\Companies\PasswordResetController as CompanyPasswordResetController;
 use App\Http\Controllers\Auth\Users\AuthController as UserAuthController;
 use App\Http\Controllers\Auth\Users\PasswordResetController as UserPasswordResetController;
+use App\Http\Controllers\Companies\JobPostingController as CompanyJobPostingController;
 use App\Http\Controllers\Companies\ProfileController as CompanyProfileController;
+use App\Http\Controllers\JobPostingController;
 use App\Http\Controllers\Users\CertificationController;
 use App\Http\Controllers\Users\EducationController;
 use App\Http\Controllers\Users\ProfileController as UserProfileController;
 use App\Http\Controllers\Users\WorkExperienceController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('job-postings', [JobPostingController::class, 'index'])->name('job-postings.index');
+Route::get('job-postings/{jobPosting}', [JobPostingController::class, 'show'])->name('job-postings.show');
 
 Route::prefix('users')->name('users.')->group(function () {
     Route::post('register', [UserAuthController::class, 'register'])->name('register');
@@ -46,5 +51,10 @@ Route::prefix('companies')->name('companies.')->group(function () {
 
         Route::get('profile', [CompanyProfileController::class, 'show'])->name('profile.show');
         Route::put('profile', [CompanyProfileController::class, 'update'])->name('profile.update');
+
+        Route::apiResource('job-postings', CompanyJobPostingController::class)
+            ->parameters(['job-postings' => 'jobPosting']);
+        Route::patch('job-postings/{jobPosting}/publish', [CompanyJobPostingController::class, 'publish'])->name('job-postings.publish');
+        Route::patch('job-postings/{jobPosting}/close', [CompanyJobPostingController::class, 'close'])->name('job-postings.close');
     });
 });
