@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('job_posting_id')->constrained()->cascadeOnDelete();
             $table->string('like_type')->default('standard');
+            $table->text('motivation');
             $table->string('status')->default('applied');
             $table->timestamp('applied_at');
             $table->timestamp('response_deadline');

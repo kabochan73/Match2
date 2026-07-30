@@ -16,7 +16,7 @@ class ApplicationService
 
     private const SUPER_MONTHLY_LIMIT = 1;
 
-    public function apply(User $user, JobPosting $jobPosting, LikeType $likeType): Application
+    public function apply(User $user, JobPosting $jobPosting, LikeType $likeType, string $motivation): Application
     {
         if ($jobPosting->status !== JobPostingStatus::Published) {
             throw ValidationException::withMessages([
@@ -48,6 +48,7 @@ class ApplicationService
         return $user->applications()->create([
             'job_posting_id' => $jobPosting->id,
             'like_type' => $likeType,
+            'motivation' => $motivation,
             'status' => ApplicationStatus::Applied,
             'applied_at' => now(),
             'response_deadline' => now()->addDays(7),

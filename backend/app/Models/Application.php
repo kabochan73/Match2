@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['job_posting_id', 'like_type', 'status', 'applied_at', 'response_deadline', 'company_responded_at'])]
+#[Fillable(['job_posting_id', 'like_type', 'motivation', 'status', 'applied_at', 'response_deadline', 'company_responded_at'])]
 class Application extends Model
 {
     use HasFactory;

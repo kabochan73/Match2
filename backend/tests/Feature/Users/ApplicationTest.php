@@ -26,9 +26,24 @@ it('creates an application for a published job posting', function () {
         ->postJson('/api/users/applications', [
             'job_posting_id' => $jobPosting->id,
             'like_type' => 'standard',
+            'motivation' => '御社のプロダクトに魅力を感じ応募しました。',
         ])
         ->assertCreated()
-        ->assertJsonPath('status', ApplicationStatus::Applied->value);
+        ->assertJsonPath('status', ApplicationStatus::Applied->value)
+        ->assertJsonPath('motivation', '御社のプロダクトに魅力を感じ応募しました。');
+});
+
+it('rejects an application without a motivation', function () {
+    $user = User::factory()->create();
+    $jobPosting = JobPosting::factory()->published()->create();
+
+    $this->actingAs($user, 'web')
+        ->postJson('/api/users/applications', [
+            'job_posting_id' => $jobPosting->id,
+            'like_type' => 'standard',
+        ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('motivation');
 });
 
 it('rejects applying to a non-published job posting', function () {
@@ -39,6 +54,7 @@ it('rejects applying to a non-published job posting', function () {
         ->postJson('/api/users/applications', [
             'job_posting_id' => $jobPosting->id,
             'like_type' => 'standard',
+            'motivation' => '志望動機です。',
         ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors('job_posting_id');
@@ -53,6 +69,7 @@ it('rejects a duplicate application to the same job posting', function () {
         ->postJson('/api/users/applications', [
             'job_posting_id' => $jobPosting->id,
             'like_type' => 'standard',
+            'motivation' => '志望動機です。',
         ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors('job_posting_id');
@@ -69,6 +86,7 @@ it('rejects the 11th standard like within the same month', function () {
         ->postJson('/api/users/applications', [
             'job_posting_id' => $jobPosting->id,
             'like_type' => 'standard',
+            'motivation' => '志望動機です。',
         ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors('like_type');
@@ -85,6 +103,7 @@ it('rejects the 2nd super like within the same month', function () {
         ->postJson('/api/users/applications', [
             'job_posting_id' => $jobPosting->id,
             'like_type' => 'super',
+            'motivation' => '志望動機です。',
         ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors('like_type');
@@ -101,6 +120,7 @@ it('allows a standard like even when the super like limit is reached', function 
         ->postJson('/api/users/applications', [
             'job_posting_id' => $jobPosting->id,
             'like_type' => 'standard',
+            'motivation' => '志望動機です。',
         ])
         ->assertCreated();
 });

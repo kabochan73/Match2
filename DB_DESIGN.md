@@ -194,6 +194,7 @@ erDiagram
 | user_id | bigint FK → users.id | not null | |
 | job_posting_id | bigint FK → job_postings.id | not null | |
 | like_type | string(enum) | not null, default `standard` | `standard`(通常のいいね) / `super`(スーパーいいね) |
+| motivation | text | not null | 志望動機。企業ごとに個別入力する自由記述(文字数上限なし) |
 | status | string(enum) | not null, default `applied` | `applied` / `matched` / `expired`(下記参照) |
 | applied_at | timestamp | not null | 求職者が「いいね」した日時 |
 | response_deadline | timestamp | not null | `applied_at` + 7日。企業の反応期限(`like_type`によらず共通) |

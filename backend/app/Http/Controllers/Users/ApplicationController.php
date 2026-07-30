@@ -36,10 +36,16 @@ class ApplicationController extends Controller
         $validated = $request->validate([
             'job_posting_id' => ['required', 'integer', 'exists:job_postings,id'],
             'like_type' => ['required', Rule::enum(LikeType::class)],
+            'motivation' => ['required', 'string'],
         ]);
 
         $jobPosting = JobPosting::findOrFail($validated['job_posting_id']);
 
-        return $service->apply($request->user(), $jobPosting, LikeType::from($validated['like_type']));
+        return $service->apply(
+            $request->user(),
+            $jobPosting,
+            LikeType::from($validated['like_type']),
+            $validated['motivation'],
+        );
     }
 }

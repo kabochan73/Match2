@@ -25,6 +25,7 @@ class ApplicationFactory extends Factory
             'user_id' => User::factory(),
             'job_posting_id' => JobPosting::factory(),
             'like_type' => LikeType::Standard,
+            'motivation' => fake()->text(200),
             'status' => ApplicationStatus::Applied,
             'applied_at' => $appliedAt,
             'response_deadline' => $appliedAt->copy()->addDays(7),
