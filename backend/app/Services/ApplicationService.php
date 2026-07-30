@@ -75,4 +75,12 @@ class ApplicationService
 
         return $application;
     }
+
+    public function expireOverdue(): int
+    {
+        return Application::query()
+            ->where('status', ApplicationStatus::Applied)
+            ->where('response_deadline', '<', now())
+            ->update(['status' => ApplicationStatus::Expired]);
+    }
 }
