@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth\Companies;
 
+use App\Http\Controllers\Auth\ThrottlesLogins;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginCompanyRequest;
 use App\Http\Requests\Auth\RegisterCompanyRequest;
@@ -13,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    use ThrottlesLogins;
+
     public function register(RegisterCompanyRequest $request): Company
     {
         $company = Company::create($request->validated());
@@ -25,11 +28,17 @@ class AuthController extends Controller
 
     public function login(LoginCompanyRequest $request): Company
     {
+        $this->ensureIsNotRateLimited($request, 'companies');
+
         if (! Auth::guard('companies')->attempt($request->validated())) {
+            $this->hitRateLimiter($request, 'companies');
+
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
+
+        $this->clearRateLimiter($request, 'companies');
 
         $request->session()->regenerate();
 

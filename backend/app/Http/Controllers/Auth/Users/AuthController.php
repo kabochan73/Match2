@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth\Users;
 
+use App\Http\Controllers\Auth\ThrottlesLogins;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginUserRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
@@ -13,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    use ThrottlesLogins;
+
     public function register(RegisterUserRequest $request): User
     {
         $user = User::create($request->validated());
@@ -25,11 +28,17 @@ class AuthController extends Controller
 
     public function login(LoginUserRequest $request): User
     {
+        $this->ensureIsNotRateLimited($request, 'users');
+
         if (! Auth::guard('web')->attempt($request->validated())) {
+            $this->hitRateLimiter($request, 'users');
+
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
+
+        $this->clearRateLimiter($request, 'users');
 
         $request->session()->regenerate();
 
