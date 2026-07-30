@@ -4,9 +4,11 @@ use App\Http\Controllers\Auth\Companies\AuthController as CompanyAuthController;
 use App\Http\Controllers\Auth\Companies\PasswordResetController as CompanyPasswordResetController;
 use App\Http\Controllers\Auth\Users\AuthController as UserAuthController;
 use App\Http\Controllers\Auth\Users\PasswordResetController as UserPasswordResetController;
+use App\Http\Controllers\Companies\ApplicationController as CompanyApplicationController;
 use App\Http\Controllers\Companies\JobPostingController as CompanyJobPostingController;
 use App\Http\Controllers\Companies\ProfileController as CompanyProfileController;
 use App\Http\Controllers\JobPostingController;
+use App\Http\Controllers\Users\ApplicationController as UserApplicationController;
 use App\Http\Controllers\Users\CertificationController;
 use App\Http\Controllers\Users\EducationController;
 use App\Http\Controllers\Users\ProfileController as UserProfileController;
@@ -36,6 +38,9 @@ Route::prefix('users')->name('users.')->group(function () {
             ->only(['index', 'store', 'update', 'destroy']);
         Route::apiResource('certifications', CertificationController::class)
             ->only(['index', 'store', 'update', 'destroy']);
+
+        Route::apiResource('applications', UserApplicationController::class)
+            ->only(['index', 'show', 'store']);
     });
 });
 
@@ -56,5 +61,9 @@ Route::prefix('companies')->name('companies.')->group(function () {
             ->parameters(['job-postings' => 'jobPosting']);
         Route::patch('job-postings/{jobPosting}/publish', [CompanyJobPostingController::class, 'publish'])->name('job-postings.publish');
         Route::patch('job-postings/{jobPosting}/close', [CompanyJobPostingController::class, 'close'])->name('job-postings.close');
+
+        Route::apiResource('applications', CompanyApplicationController::class)
+            ->only(['index', 'show']);
+        Route::patch('applications/{application}/match', [CompanyApplicationController::class, 'match'])->name('applications.match');
     });
 });
