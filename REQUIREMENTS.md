@@ -104,7 +104,7 @@
 | 領域                 | 技術                                                                                    |
 | -------------------- | --------------------------------------------------------------------------------------- |
 | Backend              | Laravel(API)                                                                             |
-| Backendアーキテクチャ | Controllerは薄く保ち、`FormRequest`(バリデーション)・`Policies`(認可)・`Services`(業務ロジック)にレイヤーを分離 |
+| Backendアーキテクチャ | Controllerは薄く保つ。バリデーションは複雑なもの(相互バリデーション・DBクエリを伴う制約等)のみ`FormRequest`に分離し、単純なもの(数項目のみ・相互依存なし)はController内で直接バリデーションする。認可は`Policies`、業務ロジックは`Services`に分離 |
 | Backendテスト         | Pest                                                                                     |
 | 認証                 | Laravel Sanctum(SPA認証)                                                                |
 | 決済                 | Stripe(テストモード、求人ごとのサブスクリプション)。Laravel Cashierを使用(1求人=1顧客として扱う前提でCashierのデフォルト設計を拡張) |

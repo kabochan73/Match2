@@ -4,6 +4,11 @@ use App\Http\Controllers\Auth\Companies\AuthController as CompanyAuthController;
 use App\Http\Controllers\Auth\Companies\PasswordResetController as CompanyPasswordResetController;
 use App\Http\Controllers\Auth\Users\AuthController as UserAuthController;
 use App\Http\Controllers\Auth\Users\PasswordResetController as UserPasswordResetController;
+use App\Http\Controllers\Companies\ProfileController as CompanyProfileController;
+use App\Http\Controllers\Users\CertificationController;
+use App\Http\Controllers\Users\EducationController;
+use App\Http\Controllers\Users\ProfileController as UserProfileController;
+use App\Http\Controllers\Users\WorkExperienceController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('users')->name('users.')->group(function () {
@@ -15,6 +20,17 @@ Route::prefix('users')->name('users.')->group(function () {
     Route::middleware('auth:web')->group(function () {
         Route::post('logout', [UserAuthController::class, 'logout'])->name('logout');
         Route::get('me', [UserAuthController::class, 'me'])->name('me');
+
+        Route::get('profile', [UserProfileController::class, 'show'])->name('profile.show');
+        Route::put('profile', [UserProfileController::class, 'update'])->name('profile.update');
+
+        Route::apiResource('work-experiences', WorkExperienceController::class)
+            ->parameters(['work-experiences' => 'workExperience'])
+            ->only(['index', 'store', 'update', 'destroy']);
+        Route::apiResource('educations', EducationController::class)
+            ->only(['index', 'store', 'update', 'destroy']);
+        Route::apiResource('certifications', CertificationController::class)
+            ->only(['index', 'store', 'update', 'destroy']);
     });
 });
 
@@ -27,5 +43,8 @@ Route::prefix('companies')->name('companies.')->group(function () {
     Route::middleware('auth:companies')->group(function () {
         Route::post('logout', [CompanyAuthController::class, 'logout'])->name('logout');
         Route::get('me', [CompanyAuthController::class, 'me'])->name('me');
+
+        Route::get('profile', [CompanyProfileController::class, 'show'])->name('profile.show');
+        Route::put('profile', [CompanyProfileController::class, 'update'])->name('profile.update');
     });
 });

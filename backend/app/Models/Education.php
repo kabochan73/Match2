@@ -12,6 +12,8 @@ class Education extends Model
 {
     use HasFactory;
 
+    protected $table = 'educations';
+
     /**
      * @return BelongsTo<User, $this>
      */
