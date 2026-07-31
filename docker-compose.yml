@@ -26,6 +26,8 @@ services:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
+    depends_on:
+      - app
 
   db:
     image: postgres:17-alpine
