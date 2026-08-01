@@ -16,6 +16,43 @@ async function ensureCsrfCookie(): Promise<void> {
   });
 }
 
+function sendRequest(
+  path: string,
+  method: string,
+  isMutating: boolean,
+  init: RequestInit,
+): Promise<Response> {
+  const headers = new Headers(init.headers);
+  headers.set("Accept", "application/json");
+  if (init.body !== undefined) {
+    headers.set("Content-Type", "application/json");
+  }
+  if (isMutating) {
+    const token = readCookie("XSRF-TOKEN");
+    if (token) headers.set("X-XSRF-TOKEN", token);
+  }
+
+  return fetch(`${PUBLIC_API_URL}${path}`, {
+    ...init,
+    method,
+    headers,
+    credentials: "include",
+  });
+}
+
+async function toResult<T>(response: Response): Promise<T> {
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(response.status, body);
+  }
+
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  return (await response.json()) as T;
+}
+
 /**
  * Browser-side fetch wrapper for Laravel Sanctum SPA auth: sends the
  * session cookie automatically and attaches the X-XSRF-TOKEN header
@@ -27,36 +64,22 @@ export async function apiClientFetch<T>(
   init: RequestInit = {},
 ): Promise<T> {
   const method = (init.method ?? "GET").toUpperCase();
+  const isMutating = MUTATING_METHODS.has(method);
 
-  if (MUTATING_METHODS.has(method) && !readCookie("XSRF-TOKEN")) {
+  if (isMutating && !readCookie("XSRF-TOKEN")) {
     await ensureCsrfCookie();
   }
 
-  const headers = new Headers(init.headers);
-  headers.set("Accept", "application/json");
-  if (init.body !== undefined) {
-    headers.set("Content-Type", "application/json");
-  }
-  if (MUTATING_METHODS.has(method)) {
-    const token = readCookie("XSRF-TOKEN");
-    if (token) headers.set("X-XSRF-TOKEN", token);
-  }
+  const response = await sendRequest(path, method, isMutating, init);
 
-  const response = await fetch(`${PUBLIC_API_URL}${path}`, {
-    ...init,
-    method,
-    headers,
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    const body = await response.json().catch(() => null);
-    throw new ApiError(response.status, body);
+  // A present XSRF-TOKEN cookie isn't necessarily a *valid* one (e.g. the
+  // session it was issued for expired). On a 419 (CSRF mismatch), refresh
+  // the CSRF cookie once and retry, instead of failing every request from
+  // then on until the user manually clears cookies.
+  if (response.status === 419 && isMutating) {
+    await ensureCsrfCookie();
+    return toResult<T>(await sendRequest(path, method, isMutating, init));
   }
 
-  if (response.status === 204) {
-    return undefined as T;
-  }
-
-  return (await response.json()) as T;
+  return toResult<T>(response);
 }
