@@ -6,7 +6,7 @@ import type { Company } from "@/lib/api/types";
 import { companyMeQueryKey } from "@/lib/auth/companies";
 import { getQueryClient } from "@/lib/query/get-query-client";
 
-export default async function CompanyLayout({
+export default async function CompanyProtectedLayout({
   children,
 }: {
   children: React.ReactNode;

@@ -6,7 +6,7 @@ import type { User } from "@/lib/api/types";
 import { userMeQueryKey } from "@/lib/auth/users";
 import { getQueryClient } from "@/lib/query/get-query-client";
 
-export default async function SeekerLayout({
+export default async function SeekerProtectedLayout({
   children,
 }: {
   children: React.ReactNode;
