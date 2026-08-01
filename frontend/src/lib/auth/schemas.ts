@@ -27,3 +27,17 @@ export const registerSchema = z
     path: ["password_confirmation"],
   });
 export type RegisterInput = z.infer<typeof registerSchema>;
+
+export const profileSchema = z.object({
+  name: z
+    .string()
+    .min(1, "名前を入力してください")
+    .max(50, "名前は50文字以内で入力してください"),
+  comment: z
+    .union([z.literal(""), z.string().max(200, "自己紹介は200文字以内で入力してください")])
+    .optional(),
+  portfolio_url: z
+    .union([z.literal(""), z.string().url("URLの形式が正しくありません").max(255)])
+    .optional(),
+});
+export type ProfileInput = z.infer<typeof profileSchema>;
