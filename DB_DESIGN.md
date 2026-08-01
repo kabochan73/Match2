@@ -52,7 +52,6 @@ erDiagram
         string company_name
         date started_on
         date ended_on
-        string position
         string employment_type
     }
     EDUCATIONS {
@@ -138,7 +137,6 @@ erDiagram
 | company_name | string | not null | |
 | started_on | date | not null | 在籍開始年月 |
 | ended_on | date | nullable | 在籍終了年月。nullは在籍中を表す |
-| position | string | nullable | 役職 |
 | employment_type | string(enum) | not null | `full_time` / `part_time` / `contract`(job_postingsと同じ区分) |
 | created_at / updated_at | timestamp | | |
 

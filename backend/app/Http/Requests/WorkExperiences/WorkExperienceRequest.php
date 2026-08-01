@@ -22,7 +22,6 @@ class WorkExperienceRequest extends FormRequest
             'company_name' => ['required', 'string', 'max:255'],
             'started_on' => ['required', 'date'],
             'ended_on' => ['nullable', 'date', 'after_or_equal:started_on'],
-            'position' => ['nullable', 'string', 'max:255'],
             'employment_type' => ['required', Rule::enum(EmploymentType::class)],
         ];
     }

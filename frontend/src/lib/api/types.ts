@@ -8,6 +8,19 @@ export type User = {
   updated_at: string;
 };
 
+export type EmploymentType = "full_time" | "part_time" | "contract";
+
+export type WorkExperience = {
+  id: number;
+  user_id: number;
+  company_name: string;
+  started_on: string;
+  ended_on: string | null;
+  employment_type: EmploymentType;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Company = {
   id: number;
   name: string;

@@ -33,7 +33,6 @@ it('creates a work experience for the authenticated user', function () {
             'company_name' => 'Acme Inc',
             'started_on' => '2020-04-01',
             'ended_on' => '2023-03-31',
-            'position' => 'Engineer',
             'employment_type' => 'full_time',
         ])
         ->assertCreated()

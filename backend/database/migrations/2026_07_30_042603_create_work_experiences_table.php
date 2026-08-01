@@ -14,7 +14,6 @@ return new class extends Migration
             $table->string('company_name');
             $table->date('started_on');
             $table->date('ended_on')->nullable();
-            $table->string('position')->nullable();
             $table->string('employment_type');
             $table->timestamps();
 
