@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const TABS = [
   { href: "/mypage", label: "基本情報" },
   { href: "/mypage/work-experiences", label: "職務経歴" },
+  { href: "/mypage/educations", label: "学歴" },
 ];
 
 export function MypageTabs() {

@@ -21,6 +21,14 @@ export type WorkExperience = {
   updated_at: string;
 };
 
+export type Education = {
+  id: number;
+  user_id: number;
+  school_name: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Company = {
   id: number;
   name: string;
