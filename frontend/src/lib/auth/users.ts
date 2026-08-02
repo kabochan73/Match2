@@ -22,6 +22,10 @@ export function registerUser(input: RegisterInput): Promise<User> {
   });
 }
 
+export function logoutUser(): Promise<void> {
+  return apiClientFetch<void>("/api/users/logout", { method: "POST" });
+}
+
 export function updateUserProfile(input: ProfileInput): Promise<User> {
   return apiClientFetch<User>("/api/users/profile", {
     method: "PUT",

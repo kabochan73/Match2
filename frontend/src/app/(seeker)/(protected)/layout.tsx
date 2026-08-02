@@ -5,6 +5,7 @@ import { ApiError } from "@/lib/api/errors";
 import type { User } from "@/lib/api/types";
 import { userMeQueryKey } from "@/lib/auth/users";
 import { getQueryClient } from "@/lib/query/get-query-client";
+import { Header } from "@/components/seeker/Header";
 
 export default async function SeekerProtectedLayout({
   children,
@@ -27,6 +28,7 @@ export default async function SeekerProtectedLayout({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <Header />
       {children}
     </HydrationBoundary>
   );
