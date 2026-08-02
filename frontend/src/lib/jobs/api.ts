@@ -24,3 +24,9 @@ export function fetchJobPostings(
     { next: { revalidate: 600 } },
   );
 }
+
+export function fetchJobPosting(id: string): Promise<JobPosting> {
+  return apiPublicFetch<JobPosting>(`/api/job-postings/${id}`, {
+    next: { revalidate: 3600 },
+  });
+}
