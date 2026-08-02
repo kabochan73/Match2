@@ -39,3 +39,29 @@ export async function apiServerFetch<T>(
 
   return (await response.json()) as T;
 }
+
+/**
+ * Server Component fetch wrapper for public, unauthenticated endpoints
+ * (e.g. job postings). Unlike apiServerFetch, this never calls cookies(),
+ * so the caller's `cache`/`next` options (e.g. `next: { revalidate: 600 }`)
+ * are respected, enabling the Next.js Data Cache for these requests.
+ */
+export async function apiPublicFetch<T>(
+  path: string,
+  init: RequestInit = {},
+): Promise<T> {
+  const headers = new Headers(init.headers);
+  headers.set("Accept", "application/json");
+
+  const response = await fetch(`${INTERNAL_API_URL}${path}`, {
+    ...init,
+    headers,
+  });
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(response.status, body);
+  }
+
+  return (await response.json()) as T;
+}

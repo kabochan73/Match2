@@ -52,3 +52,35 @@ export type Company = {
   created_at: string;
   updated_at: string;
 };
+
+export type JobPosting = {
+  id: number;
+  title: string;
+  description: string;
+  desired_candidate: string | null;
+  employment_type: EmploymentType;
+  prefecture: string;
+  salary_min: number | null;
+  salary_max: number | null;
+  published_at: string;
+  company: {
+    id: number;
+    name: string;
+  };
+};
+
+export type PaginatedResponse<T> = {
+  data: T[];
+  links: {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+};
