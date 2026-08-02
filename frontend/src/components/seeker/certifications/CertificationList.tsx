@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Certification } from "@/lib/api/types";
-import type { CertificationInput } from "@/lib/certifications/schemas";
+import type { CertificationInput } from "@/lib/seeker/certifications/schemas";
 import { CertificationForm } from "./CertificationForm";
 
 type CertificationListProps = {

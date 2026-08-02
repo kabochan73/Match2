@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { profileSchema, type ProfileInput } from "@/lib/auth/schemas";
+import { profileSchema, type ProfileInput } from "@/lib/seeker/users";
 import { applyServerValidationErrors } from "@/lib/api/validation";
 
 type ProfileFormProps = {

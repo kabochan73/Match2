@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { RegisterForm } from "@/components/auth/RegisterForm";
-import { registerUser, userMeQueryKey } from "@/lib/auth/users";
+import { registerUser, userMeQueryKey } from "@/lib/seeker/users";
 
 export default function SeekerRegisterPage() {
   const router = useRouter();

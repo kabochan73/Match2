@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { userMeQueryOptions } from "@/lib/auth/users";
-import { workExperiencesQueryOptions } from "@/lib/work-experiences/api";
-import { EMPLOYMENT_TYPE_OPTIONS } from "@/lib/work-experiences/schemas";
-import { educationsQueryOptions } from "@/lib/educations/api";
-import { certificationsQueryOptions } from "@/lib/certifications/api";
+import { userMeQueryOptions } from "@/lib/seeker/users";
+import { workExperiencesQueryOptions } from "@/lib/seeker/work-experiences/api";
+import { EMPLOYMENT_TYPE_OPTIONS } from "@/lib/seeker/work-experiences/schemas";
+import { educationsQueryOptions } from "@/lib/seeker/educations/api";
+import { certificationsQueryOptions } from "@/lib/seeker/certifications/api";
 
 const EMPLOYMENT_TYPE_LABELS = Object.fromEntries(
   EMPLOYMENT_TYPE_OPTIONS.map((option) => [option.value, option.label]),
@@ -54,13 +54,13 @@ export default function MyPage() {
             {workExperiences.map((workExperience) => (
               <li key={workExperience.id} className="rounded border p-4">
                 <p className="font-medium">{workExperience.company_name}</p>
-                <p className="text-sm text-gray-600">
-                  {EMPLOYMENT_TYPE_LABELS[workExperience.employment_type]}
-                </p>
-                <p className="text-sm text-gray-600">
-                  {workExperience.started_on.slice(0, 10)} 〜{" "}
-                  {workExperience.ended_on ? workExperience.ended_on.slice(0, 10) : "現在"}
-                </p>
+                <div className="flex gap-3 text-sm text-gray-600">
+                  <span>{EMPLOYMENT_TYPE_LABELS[workExperience.employment_type]}</span>
+                  <span>
+                    {workExperience.started_on.slice(0, 10)} 〜{" "}
+                    {workExperience.ended_on ? workExperience.ended_on.slice(0, 10) : "現在"}
+                  </span>
+                </div>
               </li>
             ))}
           </ul>

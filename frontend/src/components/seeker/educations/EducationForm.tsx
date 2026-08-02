@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { educationSchema, type EducationInput } from "@/lib/educations/schemas";
+import { educationSchema, type EducationInput } from "@/lib/seeker/educations/schemas";
 import { applyServerValidationErrors } from "@/lib/api/validation";
 
 type EducationFormProps = {

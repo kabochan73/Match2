@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   certificationSchema,
   type CertificationInput,
-} from "@/lib/certifications/schemas";
+} from "@/lib/seeker/certifications/schemas";
 import { applyServerValidationErrors } from "@/lib/api/validation";
 
 type CertificationFormProps = {

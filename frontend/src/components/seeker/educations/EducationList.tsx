@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Education } from "@/lib/api/types";
-import type { EducationInput } from "@/lib/educations/schemas";
+import type { EducationInput } from "@/lib/seeker/educations/schemas";
 import { EducationForm } from "./EducationForm";
 
 type EducationListProps = {

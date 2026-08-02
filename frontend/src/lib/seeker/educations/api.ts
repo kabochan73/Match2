@@ -8,9 +8,12 @@ export function fetchEducations(): Promise<Education[]> {
   return apiClientFetch<Education[]>("/api/users/educations");
 }
 
+// Changes only through this app's own mutations (which invalidate this key),
+// so no background refetching is needed.
 export const educationsQueryOptions = {
   queryKey: educationsQueryKey,
   queryFn: fetchEducations,
+  staleTime: Infinity,
 };
 
 export function createEducation(input: EducationInput): Promise<Education> {

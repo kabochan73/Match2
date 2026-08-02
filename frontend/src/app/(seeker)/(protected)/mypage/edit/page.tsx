@@ -9,31 +9,31 @@ import { EducationForm } from "@/components/seeker/educations/EducationForm";
 import { EducationList } from "@/components/seeker/educations/EducationList";
 import { CertificationForm } from "@/components/seeker/certifications/CertificationForm";
 import { CertificationList } from "@/components/seeker/certifications/CertificationList";
-import { updateUserProfile, userMeQueryKey, userMeQueryOptions } from "@/lib/auth/users";
+import { updateUserProfile, userMeQueryKey, userMeQueryOptions } from "@/lib/seeker/users";
 import {
   createWorkExperience,
   deleteWorkExperience,
   updateWorkExperience,
   workExperiencesQueryKey,
   workExperiencesQueryOptions,
-} from "@/lib/work-experiences/api";
-import type { WorkExperienceInput } from "@/lib/work-experiences/schemas";
+} from "@/lib/seeker/work-experiences/api";
+import type { WorkExperienceInput } from "@/lib/seeker/work-experiences/schemas";
 import {
   createEducation,
   deleteEducation,
   educationsQueryKey,
   educationsQueryOptions,
   updateEducation,
-} from "@/lib/educations/api";
-import type { EducationInput } from "@/lib/educations/schemas";
+} from "@/lib/seeker/educations/api";
+import type { EducationInput } from "@/lib/seeker/educations/schemas";
 import {
   certificationsQueryKey,
   certificationsQueryOptions,
   createCertification,
   deleteCertification,
   updateCertification,
-} from "@/lib/certifications/api";
-import type { CertificationInput } from "@/lib/certifications/schemas";
+} from "@/lib/seeker/certifications/api";
+import type { CertificationInput } from "@/lib/seeker/certifications/schemas";
 
 export default function MyPageEditPage() {
   const queryClient = useQueryClient();

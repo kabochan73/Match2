@@ -5,7 +5,7 @@ import type { WorkExperience } from "@/lib/api/types";
 import {
   EMPLOYMENT_TYPE_OPTIONS,
   type WorkExperienceInput,
-} from "@/lib/work-experiences/schemas";
+} from "@/lib/seeker/work-experiences/schemas";
 import { WorkExperienceForm } from "./WorkExperienceForm";
 
 const EMPLOYMENT_TYPE_LABELS = Object.fromEntries(

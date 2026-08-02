@@ -8,9 +8,12 @@ export function fetchWorkExperiences(): Promise<WorkExperience[]> {
   return apiClientFetch<WorkExperience[]>("/api/users/work-experiences");
 }
 
+// Changes only through this app's own mutations (which invalidate this key),
+// so no background refetching is needed.
 export const workExperiencesQueryOptions = {
   queryKey: workExperiencesQueryKey,
   queryFn: fetchWorkExperiences,
+  staleTime: Infinity,
 };
 
 function toPayload(input: WorkExperienceInput) {

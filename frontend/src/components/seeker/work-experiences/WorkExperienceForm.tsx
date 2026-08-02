@@ -7,7 +7,7 @@ import {
   EMPLOYMENT_TYPE_OPTIONS,
   workExperienceSchema,
   type WorkExperienceInput,
-} from "@/lib/work-experiences/schemas";
+} from "@/lib/seeker/work-experiences/schemas";
 import { applyServerValidationErrors } from "@/lib/api/validation";
 
 type WorkExperienceFormProps = {

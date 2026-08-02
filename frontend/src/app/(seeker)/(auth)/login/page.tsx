@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoginForm } from "@/components/auth/LoginForm";
-import { loginUser, userMeQueryKey } from "@/lib/auth/users";
+import { loginUser, userMeQueryKey } from "@/lib/seeker/users";
 
 export default function SeekerLoginPage() {
   const router = useRouter();
