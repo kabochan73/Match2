@@ -15,8 +15,7 @@ erDiagram
     USERS ||--o{ LIKES : "applies (=likes)"
     JOB_POSTINGS ||--o{ LIKES : "receives"
     LIKES ||--o{ MESSAGES : "has thread"
-    JOB_POSTINGS ||--o| JOB_POSTING_SUBSCRIPTIONS : "billed as"
-    JOB_POSTING_SUBSCRIPTIONS ||--o{ PAYMENTS : "invoices"
+    COMPANIES ||--o{ PAYMENTS : "invoices"
 
     COMPANIES {
         bigint id PK
@@ -81,17 +80,9 @@ erDiagram
         bigint sender_id
         text body
     }
-    JOB_POSTING_SUBSCRIPTIONS {
-        bigint id PK
-        bigint job_posting_id FK
-        bigint company_id FK
-        string stripe_subscription_id
-        string status
-        timestamp trial_ends_at
-    }
     PAYMENTS {
         bigint id PK
-        bigint job_posting_subscription_id FK
+        bigint company_id FK
         string stripe_invoice_id
         integer amount
         string status
@@ -224,30 +215,18 @@ erDiagram
 
 面接日程調整は構造化された機能(候補日提示→確定)を持たず、マッチ成立後の`messages`でのやり取りに委ねる。そのため`interview_schedules`/`interview_schedule_slots`は持たない。
 
-### job_posting_subscriptions(求人ごとのサブスクリプション課金)
-| カラム | 型 | 制約 | 備考 |
-|---|---|---|---|
-| id | bigint | PK | |
-| job_posting_id | bigint FK → job_postings.id | not null, unique | 1求人につき1件 |
-| company_id | bigint FK → companies.id | not null | 検索用に非正規化 |
-| stripe_subscription_id | string | nullable, unique | Stripe側のsubscription ID(Cashierの`subscriptions.stripe_id`と一致) |
-| stripe_price_id | string | nullable | 月額1,000円のPrice ID |
-| status | string(enum) | not null, default `trialing` | `trialing` / `active` / `past_due` / `canceled` / `unpaid`(Stripeのステータスに準拠) |
-| trial_ends_at | timestamp | not null | `published_at` + 14日 |
-| current_period_start | timestamp | nullable | |
-| current_period_end | timestamp | nullable | |
-| created_at / updated_at | timestamp | | |
-
 ### payments(請求履歴)
 | カラム | 型 | 制約 | 備考 |
 |---|---|---|---|
 | id | bigint | PK | |
-| job_posting_subscription_id | bigint FK → job_posting_subscriptions.id | not null | |
+| company_id | bigint FK → companies.id | not null | |
 | stripe_invoice_id | string | unique, not null | |
 | amount | integer | not null | 円単位(1000) |
 | status | string(enum) | not null | `paid` / `failed` / `pending` |
 | paid_at | timestamp | nullable | |
 | created_at | timestamp | | |
+
+企業のサブスクリプション自体(ステータス・現在の請求期間等)は独自テーブルを持たず、Laravel Cashier標準の`subscriptions`/`subscription_items`テーブル(`companies`を1 Stripe顧客、`name = "default"`の単一サブスクリプションとして扱う)をそのまま実体として使う。`payments`はStripe Webhookで同期する請求履歴のキャッシュのみ。
 
 ### notifications(アプリ内通知。Laravel標準テーブルを使用)
 | カラム | 型 | 制約 | 備考 |
@@ -282,10 +261,10 @@ erDiagram
 
 - **求職者/企業の認証分離**: `users` と `companies` は別テーブル・別Sanctumガードで管理する(1社1アカウントのため `companies` がそのままログイン主体を兼ねる)。
 - **メッセージの送信者**: `messages.sender_type` / `sender_id` は簡易ポリモーフィック。Eloquentの`morphTo`を使用してもよい。
-- **課金と公開状態の連動**: `job_postings.status` はバッチ処理(Laravel Scheduler)や Stripe Webhook(`invoice.payment_failed` 等)から更新する。`job_posting_subscriptions.status` がStripe側の実体、`job_postings.status` はアプリの表示制御用という役割分担。
-- **Laravel Cashierとの関係**: 決済はLaravel Cashierで実装する。Cashierは`Billable`トレイトを持つモデル(=`Company`)を1 Stripe顧客として扱い、`name`(サブスクリプションの識別名)を分けることで1顧客が複数サブスクリプションを持てる。求人ごとの課金は `name = "job_posting:{job_posting_id}"` のようなサブスクリプション名で管理し、Cashier標準の`subscriptions`/`subscription_items`テーブルを実体として使う。`job_posting_subscriptions`テーブルは、その中のどのCashierサブスクリプションがどの求人に対応するかを紐付け、アプリ側の検索・表示用に非正規化した薄いラッパーという位置づけ。
+- **課金と公開状態の連動**: 企業の`subscriptions`(Cashier標準テーブル)のステータスが`active`でない場合、その企業の`job_postings`は全件Stripe Webhook(`invoice.payment_failed`等)から`unpublished`に更新する。求人単位の課金ステータスは持たない。
+- **Laravel Cashierとの関係**: 決済はLaravel Cashierを標準的な使い方で実装する。`Billable`トレイトを持つ`Company`を1 Stripe顧客とし、単一の名前付きサブスクリプション(`name = "default"`)を持たせる。Cashier標準の`subscriptions`/`subscription_items`テーブルをそのまま実体として使うため、アプリ独自のサブスクリプション用テーブルは不要。
 - **マッチ失効バッチ**: Laravel Schedulerで定期的に `likes` を走査し、`status = applied` かつ `response_deadline` を過ぎているレコードを `status = expired` に更新する(`likes:expire`コマンド、1時間おき)。
-- **支払い方法の登録タイミング**: 求人投稿時にカード登録は必須にしない。無料期間中(`trial_ends_at`まで)は`stripe_subscription_id`が未設定のまま`status = trialing`で公開できる。期限が近づいたら`notifications`でリマインドし、`trial_ends_at`時点でカード未登録・決済失敗なら`job_posting_subscriptions.status = unpaid`、`job_postings.status = unpublished`にバッチ/Webhookで更新する。
+- **支払い方法の登録タイミング**: 求人投稿自体にカード登録は不要。企業アカウントでカードを登録すると同時に`default`サブスクリプションの課金が(無料期間なく)開始され、以後は求人数に関わらず月額固定で使い放題になる。決済に失敗した場合はWebhookで検知し、その企業の求人をすべて`unpublished`にする。
 
 ## 5. 前バージョンからの変更点
 
@@ -300,6 +279,8 @@ erDiagram
 | `application_status_histories` を削除 | 旧設計にあったが要件4.2は明確に「選考ステータス管理機能は設けない」と規定 | 要件と矛盾する機能を実装してしまっていた |
 | `password_reset_tokens` / `company_password_reset_tokens` を追加 | 旧設計には一切存在しなかった | 要件4.1「パスワードリセット」を満たすテーブルが欠落していた |
 | `users.birthdate` を削除 | 旧設計にあったが要件のプロフィール項目(氏名・自己PR・スキル)に含まれない | 過剰設計 |
+
+**2026-08-03追記**: 課金モデルを「求人ごとの個別サブスクリプション+14日間無料トライアル」から「企業単位の単一サブスクリプション・トライアルなし」に変更し、`job_posting_subscriptions`テーブルを廃止した。求人単位のトライアルは、求人を削除して同じ内容で再投稿すれば何度でも使い回せてしまう抜け穴があったため。企業単位のトライアルであれば求人の削除では回避できないが、そもそもシンプルさを優先しトライアル自体を撤廃した。
 
 ## 6. 未決事項
 

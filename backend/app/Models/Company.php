@@ -37,10 +37,10 @@ class Company extends Authenticatable
     }
 
     /**
-     * @return HasMany<JobPostingSubscription, $this>
+     * @return HasMany<Payment, $this>
      */
-    public function jobPostingSubscriptions(): HasMany
+    public function payments(): HasMany
     {
-        return $this->hasMany(JobPostingSubscription::class);
+        return $this->hasMany(Payment::class);
     }
 }

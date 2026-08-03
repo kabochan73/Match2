@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['stripe_invoice_id', 'amount', 'status', 'paid_at'])]
+#[Fillable(['company_id', 'stripe_invoice_id', 'amount', 'status', 'paid_at'])]
 class Payment extends Model
 {
     use HasFactory;
@@ -25,10 +25,10 @@ class Payment extends Model
     }
 
     /**
-     * @return BelongsTo<JobPostingSubscription, $this>
+     * @return BelongsTo<Company, $this>
      */
-    public function jobPostingSubscription(): BelongsTo
+    public function company(): BelongsTo
     {
-        return $this->belongsTo(JobPostingSubscription::class);
+        return $this->belongsTo(Company::class);
     }
 }
