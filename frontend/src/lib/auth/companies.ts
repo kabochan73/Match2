@@ -53,6 +53,10 @@ export function registerCompany(input: RegisterInput): Promise<Company> {
   });
 }
 
+export function logoutCompany(): Promise<void> {
+  return apiClientFetch<void>("/api/companies/logout", { method: "POST" });
+}
+
 // Identity rarely changes mid-session; a manual invalidateQueries call
 // after login/logout/profile updates keeps this in sync instead of polling.
 export const companyMeQueryOptions = {

@@ -5,6 +5,7 @@ import { ApiError } from "@/lib/api/errors";
 import type { Company } from "@/lib/api/types";
 import { companyMeQueryKey } from "@/lib/auth/companies";
 import { getQueryClient } from "@/lib/query/get-query-client";
+import { Header } from "@/components/company/Header";
 
 export default async function CompanyProtectedLayout({
   children,
@@ -27,6 +28,7 @@ export default async function CompanyProtectedLayout({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
+      <Header />
       {children}
     </HydrationBoundary>
   );
