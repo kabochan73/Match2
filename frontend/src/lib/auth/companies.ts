@@ -63,4 +63,6 @@ export const companyMeQueryOptions = {
   queryKey: companyMeQueryKey,
   queryFn: fetchCurrentCompany,
   staleTime: Infinity,
+  // A 401 here just means "not logged in as a company" — retrying never helps.
+  retry: false,
 };

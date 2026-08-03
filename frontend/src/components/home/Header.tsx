@@ -8,6 +8,12 @@ export function Header() {
       </Link>
 
       <nav className="flex items-center gap-6 text-sm">
+        <Link href="/jobs" className="text-gray-600">
+          求人を探す
+        </Link>
+
+        <div className="h-6 w-px bg-gray-200" />
+
         <div className="flex items-center gap-3">
           <span className="text-gray-500">求職者の方</span>
           <Link href="/login" className="rounded border px-3 py-1.5">

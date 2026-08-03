@@ -58,4 +58,6 @@ export const userMeQueryOptions = {
   queryKey: userMeQueryKey,
   queryFn: fetchCurrentUser,
   staleTime: Infinity,
+  // A 401 here just means "not logged in as a seeker" — retrying never helps.
+  retry: false,
 };

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LogoutButton } from "./LogoutButton";
 
 const NAV_LINKS = [
+  { href: "/jobs", label: "求人を探す" },
   { href: "/companies/job-postings", label: "求人管理" },
   { href: "/companies/profile", label: "企業プロフィール" },
 ];

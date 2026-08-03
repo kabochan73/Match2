@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Header } from "@/components/home/Header";
+import { JobsHeader } from "@/components/jobs/JobsHeader";
 import { fetchJobPosting } from "@/lib/jobs/api";
 import { ApiError } from "@/lib/api/errors";
 import { EMPLOYMENT_TYPE_OPTIONS } from "@/lib/seeker/work-experiences/schemas";
@@ -31,7 +31,7 @@ export default async function JobPostingPage({
 
   return (
     <>
-      <Header />
+      <JobsHeader />
 
       <main className="flex w-full flex-1 flex-col items-center px-6 py-10">
         <article className="flex w-full max-w-2xl flex-col gap-6">
