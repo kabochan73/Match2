@@ -69,6 +69,24 @@ export type JobPosting = {
   };
 };
 
+export type JobPostingStatus = "draft" | "published" | "unpublished" | "closed";
+
+export type CompanyJobPosting = {
+  id: number;
+  company_id: number;
+  title: string;
+  description: string;
+  desired_candidate: string | null;
+  employment_type: EmploymentType;
+  prefecture: string;
+  salary_min: number | null;
+  salary_max: number | null;
+  status: JobPostingStatus;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export type PaginatedResponse<T> = {
   data: T[];
   links: {

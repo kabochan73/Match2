@@ -1,17 +1,11 @@
 import Link from "next/link";
 import { EMPLOYMENT_TYPE_OPTIONS } from "@/lib/seeker/work-experiences/schemas";
+import { formatSalaryRange } from "@/lib/jobs/format";
 import type { JobPosting } from "@/lib/api/types";
 
 const EMPLOYMENT_TYPE_LABELS = Object.fromEntries(
   EMPLOYMENT_TYPE_OPTIONS.map((option) => [option.value, option.label]),
 );
-
-function formatSalary(min: number | null, max: number | null): string {
-  if (min === null && max === null) return "給与応相談";
-  if (min !== null && max !== null) return `月給 ${min.toLocaleString()}円 〜 ${max.toLocaleString()}円`;
-  if (min !== null) return `月給 ${min.toLocaleString()}円 〜`;
-  return `〜 月給 ${max!.toLocaleString()}円`;
-}
 
 export function JobCard({ jobPosting }: { jobPosting: JobPosting }) {
   return (
@@ -24,7 +18,7 @@ export function JobCard({ jobPosting }: { jobPosting: JobPosting }) {
       <div className="flex gap-3 text-sm text-gray-600">
         <span>{jobPosting.prefecture}</span>
         <span>{EMPLOYMENT_TYPE_LABELS[jobPosting.employment_type]}</span>
-        <span>{formatSalary(jobPosting.salary_min, jobPosting.salary_max)}</span>
+        <span>{formatSalaryRange(jobPosting.salary_min, jobPosting.salary_max)}</span>
       </div>
     </Link>
   );

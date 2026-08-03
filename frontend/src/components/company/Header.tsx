@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { LogoutButton } from "./LogoutButton";
 
-const NAV_LINKS = [{ href: "/companies/profile", label: "企業プロフィール" }];
+const NAV_LINKS = [
+  { href: "/companies/job-postings", label: "求人管理" },
+  { href: "/companies/profile", label: "企業プロフィール" },
+];
 
 export function Header() {
   return (
