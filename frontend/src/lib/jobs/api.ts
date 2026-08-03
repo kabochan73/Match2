@@ -21,12 +21,12 @@ export function fetchJobPostings(
 
   return apiPublicFetch<PaginatedResponse<JobPosting>>(
     `/api/job-postings${query ? `?${query}` : ""}`,
-    { next: { revalidate: 600 } },
+    { next: { revalidate: false, tags: ["job-postings"] } },
   );
 }
 
 export function fetchJobPosting(id: string): Promise<JobPosting> {
   return apiPublicFetch<JobPosting>(`/api/job-postings/${id}`, {
-    next: { revalidate: 3600 },
+    next: { revalidate: false, tags: [`job-posting-${id}`] },
   });
 }

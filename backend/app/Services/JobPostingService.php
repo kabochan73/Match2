@@ -8,6 +8,8 @@ use Illuminate\Validation\ValidationException;
 
 class JobPostingService
 {
+    public function __construct(private RevalidationService $revalidationService) {}
+
     public function publish(JobPosting $jobPosting): JobPosting
     {
         if ($jobPosting->status !== JobPostingStatus::Draft) {
@@ -20,6 +22,8 @@ class JobPostingService
             'status' => JobPostingStatus::Published,
             'published_at' => now(),
         ]);
+
+        $this->revalidationService->jobPosting($jobPosting);
 
         return $jobPosting;
     }
@@ -35,6 +39,8 @@ class JobPostingService
         $jobPosting->update([
             'status' => JobPostingStatus::Closed,
         ]);
+
+        $this->revalidationService->jobPosting($jobPosting);
 
         return $jobPosting;
     }

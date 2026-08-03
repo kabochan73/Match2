@@ -6,8 +6,6 @@ import { EMPLOYMENT_TYPE_OPTIONS } from "@/lib/seeker/work-experiences/schemas";
 import { formatSalaryRange } from "@/lib/jobs/format";
 import type { JobPosting } from "@/lib/api/types";
 
-export const revalidate = 3600;
-
 const EMPLOYMENT_TYPE_LABELS = Object.fromEntries(
   EMPLOYMENT_TYPE_OPTIONS.map((option) => [option.value, option.label]),
 );

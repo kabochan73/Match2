@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\JobPostings\JobPostingRequest;
 use App\Models\JobPosting;
 use App\Services\JobPostingService;
+use App\Services\RevalidationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -14,6 +15,8 @@ use Illuminate\Http\Response;
 class JobPostingController extends Controller
 {
     use AuthorizesRequests;
+
+    public function __construct(private RevalidationService $revalidationService) {}
 
     /**
      * @return Collection<int, JobPosting>
@@ -41,6 +44,8 @@ class JobPostingController extends Controller
 
         $jobPosting->update($request->validated());
 
+        $this->revalidationService->jobPosting($jobPosting);
+
         return $jobPosting;
     }
 
@@ -49,6 +54,8 @@ class JobPostingController extends Controller
         $this->authorize('delete', $jobPosting);
 
         $jobPosting->delete();
+
+        $this->revalidationService->jobPosting($jobPosting);
 
         return response()->noContent();
     }
