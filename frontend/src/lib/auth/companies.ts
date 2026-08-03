@@ -1,6 +1,37 @@
+import { z } from "zod";
 import { apiClientFetch } from "@/lib/api/client";
 import type { Company } from "@/lib/api/types";
+import { PREFECTURES } from "@/lib/prefectures";
 import type { LoginInput, RegisterInput } from "./schemas";
+
+export const companyProfileSchema = z.object({
+  name: z
+    .string()
+    .min(1, "会社名を入力してください")
+    .max(255, "会社名は255文字以内で入力してください"),
+  description: z.union([z.literal(""), z.string()]).optional(),
+  phone_number: z
+    .union([z.literal(""), z.string().max(20, "電話番号は20文字以内で入力してください")])
+    .optional(),
+  prefecture: z.union([z.literal(""), z.enum(PREFECTURES)]).optional(),
+  address_line: z
+    .union([z.literal(""), z.string().max(255, "住所は255文字以内で入力してください")])
+    .optional(),
+});
+export type CompanyProfileInput = z.infer<typeof companyProfileSchema>;
+
+export function updateCompanyProfile(input: CompanyProfileInput): Promise<Company> {
+  return apiClientFetch<Company>("/api/companies/profile", {
+    method: "PUT",
+    body: JSON.stringify({
+      name: input.name,
+      description: input.description || null,
+      phone_number: input.phone_number || null,
+      prefecture: input.prefecture || null,
+      address_line: input.address_line || null,
+    }),
+  });
+}
 
 export const companyMeQueryKey = ["auth", "companies", "me"] as const;
 
