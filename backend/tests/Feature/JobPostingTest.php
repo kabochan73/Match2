@@ -50,15 +50,15 @@ it('filters job postings by keyword', function () {
 
 it('filters job postings by prefecture and employment_type', function () {
     JobPosting::factory()->published()->create([
-        'prefecture' => '東京都',
+        'prefecture' => '東京',
         'employment_type' => 'full_time',
     ]);
     JobPosting::factory()->published()->create([
-        'prefecture' => '大阪府',
+        'prefecture' => '大阪',
         'employment_type' => 'contract',
     ]);
 
-    $query = http_build_query(['prefecture' => '東京都', 'employment_type' => 'full_time']);
+    $query = http_build_query(['prefecture' => '東京', 'employment_type' => 'full_time']);
 
     $this->getJson("/api/job-postings?{$query}")
         ->assertOk()

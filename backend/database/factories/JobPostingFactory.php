@@ -24,7 +24,7 @@ class JobPostingFactory extends Factory
             'description' => fake()->text(200),
             'desired_candidate' => fake()->text(200),
             'employment_type' => fake()->randomElement(EmploymentType::cases()),
-            'prefecture' => '東京都',
+            'prefecture' => '東京',
             'salary_min' => 300000,
             'salary_max' => 500000,
             'status' => JobPostingStatus::Draft,

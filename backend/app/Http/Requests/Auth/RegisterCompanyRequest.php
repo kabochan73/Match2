@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Enums\Prefecture;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class RegisterCompanyRequest extends FormRequest
@@ -23,7 +25,7 @@ class RegisterCompanyRequest extends FormRequest
             'password' => ['required', 'confirmed', Password::defaults()],
             'description' => ['nullable', 'string'],
             'phone_number' => ['nullable', 'string', 'max:20'],
-            'prefecture' => ['nullable', 'string', 'max:10'],
+            'prefecture' => ['nullable', Rule::enum(Prefecture::class)],
             'address_line' => ['nullable', 'string', 'max:100'],
         ];
     }

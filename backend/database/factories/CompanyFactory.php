@@ -29,7 +29,7 @@ class CompanyFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'description' => fake()->text(200),
             'phone_number' => fake()->numerify('03-####-####'),
-            'prefecture' => '東京都',
+            'prefecture' => '東京',
             'address_line' => fake()->streetAddress(),
         ];
     }

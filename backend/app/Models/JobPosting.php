@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\EmploymentType;
 use App\Enums\JobPostingStatus;
+use App\Enums\Prefecture;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,7 @@ class JobPosting extends Model
     {
         return [
             'employment_type' => EmploymentType::class,
+            'prefecture' => Prefecture::class,
             'status' => JobPostingStatus::class,
             'published_at' => 'datetime',
         ];

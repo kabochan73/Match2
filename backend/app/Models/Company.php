@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Prefecture;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,6 +26,7 @@ class Company extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'prefecture' => Prefecture::class,
         ];
     }
 

@@ -27,7 +27,7 @@ it('creates a job posting as draft for the authenticated company', function () {
             'description' => 'Build things.',
             'desired_candidate' => 'PHP experience.',
             'employment_type' => 'full_time',
-            'prefecture' => '東京都',
+            'prefecture' => '東京',
             'salary_min' => 400000,
             'salary_max' => 600000,
         ])
@@ -44,7 +44,7 @@ it('rejects a salary_max lower than salary_min', function () {
             'title' => 'Backend Engineer',
             'description' => 'Build things.',
             'employment_type' => 'full_time',
-            'prefecture' => '東京都',
+            'prefecture' => '東京',
             'salary_min' => 600000,
             'salary_max' => 400000,
         ])
@@ -72,7 +72,7 @@ it('forbids updating another company\'s job posting', function () {
             'title' => 'Hacked',
             'description' => 'Hacked.',
             'employment_type' => 'full_time',
-            'prefecture' => '東京都',
+            'prefecture' => '東京',
         ])
         ->assertForbidden();
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\EmploymentType;
 use App\Enums\JobPostingStatus;
+use App\Enums\Prefecture;
 use App\Http\Resources\JobPostingResource;
 use App\Models\JobPosting;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class JobPostingController extends Controller
     {
         $filters = $request->validate([
             'keyword' => ['nullable', 'string', 'max:255'],
-            'prefecture' => ['nullable', 'string', 'max:20'],
+            'prefecture' => ['nullable', Rule::enum(Prefecture::class)],
             'employment_type' => ['nullable', Rule::enum(EmploymentType::class)],
         ]);
 

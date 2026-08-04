@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Prefecture;
 use App\Models\Company;
 
 it('returns the authenticated company profile', function () {
@@ -24,7 +25,7 @@ it('updates the authenticated company profile', function () {
             'name' => 'New Company Name',
             'description' => 'Updated description',
             'phone_number' => '03-1234-5678',
-            'prefecture' => '大阪府',
+            'prefecture' => '大阪',
             'address_line' => '北区1-1-1',
         ])
         ->assertOk()
@@ -32,7 +33,7 @@ it('updates the authenticated company profile', function () {
 
     expect($company->fresh())
         ->name->toBe('New Company Name')
-        ->prefecture->toBe('大阪府');
+        ->prefecture->toBe(Prefecture::Osaka);
 });
 
 it('validates the company profile update payload', function () {
