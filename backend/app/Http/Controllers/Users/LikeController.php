@@ -21,14 +21,14 @@ class LikeController extends Controller
      */
     public function index(Request $request): Collection
     {
-        return $request->user()->likes;
+        return $request->user()->likes()->with('jobPosting.company')->get();
     }
 
     public function show(Like $like): Like
     {
         $this->authorize('view', $like);
 
-        return $like;
+        return $like->load('jobPosting.company');
     }
 
     public function store(Request $request, LikeService $service): Like

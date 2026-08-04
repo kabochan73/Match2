@@ -24,7 +24,7 @@ class MessageService
             'sender_type' => $sender->getMorphClass(),
             'sender_id' => $sender->id,
             'body' => $body,
-        ]);
+        ])->refresh();
 
         $recipient = $sender instanceof User ? $like->jobPosting->company : $like->user;
         $recipient->notify(new NewMessageReceived($message));

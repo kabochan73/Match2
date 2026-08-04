@@ -26,7 +26,7 @@ class LikeController extends Controller
         return Like::query()
             ->whereHas('jobPosting', fn ($query) => $query->where('company_id', $request->user()->id))
             ->when($validated['job_posting_id'] ?? null, fn ($query, $jobPostingId) => $query->where('job_posting_id', $jobPostingId))
-            ->with('user')
+            ->with(['user', 'jobPosting'])
             ->get();
     }
 

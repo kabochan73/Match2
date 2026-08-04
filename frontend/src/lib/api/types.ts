@@ -87,6 +87,85 @@ export type CompanyJobPosting = {
   updated_at: string;
 };
 
+export type LikeType = "standard" | "super";
+
+export type LikeStatus = "applied" | "matched" | "expired";
+
+export type Like = {
+  id: number;
+  user_id: number;
+  job_posting_id: number;
+  like_type: LikeType;
+  motivation: string;
+  status: LikeStatus;
+  applied_at: string;
+  response_deadline: string;
+  company_responded_at: string | null;
+  created_at: string;
+  updated_at: string;
+  job_posting: {
+    id: number;
+    title: string;
+    company: {
+      id: number;
+      name: string;
+    };
+  };
+};
+
+export type CompanyLike = {
+  id: number;
+  user_id: number;
+  job_posting_id: number;
+  like_type: LikeType;
+  motivation: string;
+  status: LikeStatus;
+  applied_at: string;
+  response_deadline: string;
+  company_responded_at: string | null;
+  created_at: string;
+  updated_at: string;
+  job_posting: {
+    id: number;
+    title: string;
+  };
+  user: {
+    id: number;
+    name: string;
+  };
+};
+
+export type CandidateProfile = {
+  id: number;
+  like_type: LikeType;
+  motivation: string;
+  status: LikeStatus;
+  applied_at: string;
+  response_deadline: string;
+  company_responded_at: string | null;
+  user: {
+    id: number;
+    name: string;
+    comment: string | null;
+    portfolio_url: string | null;
+    work_experiences: WorkExperience[];
+    educations: Education[];
+    certifications: Certification[];
+  };
+};
+
+export type MessageSenderType = "user" | "company";
+
+export type Message = {
+  id: number;
+  like_id: number;
+  sender_type: MessageSenderType;
+  sender_id: number;
+  body: string;
+  read_at: string | null;
+  created_at: string;
+};
+
 export type PaginatedResponse<T> = {
   data: T[];
   links: {
