@@ -1,19 +1,26 @@
 import { apiClientFetch } from "@/lib/api/client";
 import type { CandidateProfile, CompanyLike, Message } from "@/lib/api/types";
 
-export const companyLikesQueryKey = ["companies", "likes"] as const;
+export const companyLikesBaseKey = ["companies", "likes", "list"] as const;
 
-export function fetchCompanyLikes(): Promise<CompanyLike[]> {
-  return apiClientFetch<CompanyLike[]>("/api/companies/likes");
+export function companyLikesQueryKey(jobPostingId?: number) {
+  return [...companyLikesBaseKey, jobPostingId ?? null] as const;
 }
 
-// Changes only through this app's own mutations (which invalidate this key),
+export function fetchCompanyLikes(jobPostingId?: number): Promise<CompanyLike[]> {
+  const query = jobPostingId ? `?job_posting_id=${jobPostingId}` : "";
+  return apiClientFetch<CompanyLike[]>(`/api/companies/likes${query}`);
+}
+
+// Changes only through this app's own mutations (which invalidate companyLikesBaseKey),
 // so no background refetching is needed.
-export const companyLikesQueryOptions = {
-  queryKey: companyLikesQueryKey,
-  queryFn: fetchCompanyLikes,
-  staleTime: Infinity,
-};
+export function companyLikesQueryOptions(jobPostingId?: number) {
+  return {
+    queryKey: companyLikesQueryKey(jobPostingId),
+    queryFn: () => fetchCompanyLikes(jobPostingId),
+    staleTime: Infinity,
+  };
+}
 
 export function companyLikeQueryKey(id: number) {
   return ["companies", "likes", id] as const;

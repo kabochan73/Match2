@@ -7,7 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   companyLikeMessagesQueryKey,
   companyLikeQueryKey,
-  companyLikesQueryKey,
+  companyLikesBaseKey,
   fetchCompanyLike,
   fetchCompanyLikeMessages,
   matchCompanyLike,
@@ -48,7 +48,7 @@ export default function CompanyLikePage() {
     mutationFn: () => matchCompanyLike(likeId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: companyLikeQueryKey(likeId) });
-      queryClient.invalidateQueries({ queryKey: companyLikesQueryKey });
+      queryClient.invalidateQueries({ queryKey: companyLikesBaseKey });
     },
   });
 
