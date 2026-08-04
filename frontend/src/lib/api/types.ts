@@ -166,6 +166,18 @@ export type Message = {
   created_at: string;
 };
 
+export type AppNotification = {
+  id: string;
+  type: string;
+  data: {
+    like_id: number;
+    message: string;
+    [key: string]: unknown;
+  };
+  read_at: string | null;
+  created_at: string;
+};
+
 export type PaginatedResponse<T> = {
   data: T[];
   links: {

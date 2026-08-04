@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LogoutButton } from "./LogoutButton";
+import { NotificationsNavLink } from "./NotificationsNavLink";
 
 const NAV_LINKS = [
   { href: "/jobs", label: "求人を探す" },
@@ -21,6 +22,7 @@ export function Header() {
             {link.label}
           </Link>
         ))}
+        <NotificationsNavLink />
       </nav>
 
       <LogoutButton />
