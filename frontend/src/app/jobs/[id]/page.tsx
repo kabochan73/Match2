@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { JobsHeader } from "@/components/jobs/JobsHeader";
+import { ApplySection } from "@/components/jobs/ApplySection";
 import { fetchJobPosting } from "@/lib/jobs/api";
 import { ApiError } from "@/lib/api/errors";
 import { EMPLOYMENT_TYPE_OPTIONS } from "@/lib/seeker/work-experiences/schemas";
@@ -60,6 +61,8 @@ export default async function JobPostingPage({
               </p>
             </section>
           )}
+
+          <ApplySection jobPostingId={jobPosting.id} />
         </article>
       </main>
     </>

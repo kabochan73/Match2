@@ -1,10 +1,20 @@
 import { apiClientFetch } from "@/lib/api/client";
 import type { Like, Message } from "@/lib/api/types";
+import type { ApplyLikeInput } from "./schemas";
 
 export const seekerLikesQueryKey = ["likes"] as const;
 
 export function fetchSeekerLikes(): Promise<Like[]> {
   return apiClientFetch<Like[]>("/api/users/likes");
+}
+
+export function createSeekerLike(
+  input: ApplyLikeInput & { job_posting_id: number },
+): Promise<Like> {
+  return apiClientFetch<Like>("/api/users/likes", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
 }
 
 // Changes only through this app's own mutations (which invalidate this key),
