@@ -4,6 +4,7 @@ import { LogoutButton } from "./LogoutButton";
 const NAV_LINKS = [
   { href: "/jobs", label: "求人を探す" },
   { href: "/likes", label: "いいね一覧" },
+  { href: "/messages", label: "メッセージ" },
   { href: "/mypage", label: "マイページ" },
 ];
 
