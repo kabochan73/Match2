@@ -34,6 +34,7 @@ erDiagram
         string password
         string comment
         string portfolio_url
+        date birth_date
     }
     JOB_POSTINGS {
         bigint id PK
@@ -102,6 +103,7 @@ erDiagram
 | password | string | not null | |
 | comment | string(200) | nullable | 自己紹介コメント |
 | portfolio_url | string | nullable | GitHub・個人ポートフォリオサイト等のURL |
+| birth_date | date | not null | 生年月日。18歳以上60歳以下のみ許可(バックエンドは`now()->subYears()`で動的にバリデーション)。企業側の応募者一覧・詳細では年齢に変換して表示 |
 | created_at / updated_at | timestamp | | |
 
 ### companies(企業。1社1アカウント)
@@ -281,6 +283,8 @@ erDiagram
 | `users.birthdate` を削除 | 旧設計にあったが要件のプロフィール項目(氏名・自己PR・スキル)に含まれない | 過剰設計 |
 
 **2026-08-03追記**: 課金モデルを「求人ごとの個別サブスクリプション+14日間無料トライアル」から「企業単位の単一サブスクリプション・トライアルなし」に変更し、`job_posting_subscriptions`テーブルを廃止した。求人単位のトライアルは、求人を削除して同じ内容で再投稿すれば何度でも使い回せてしまう抜け穴があったため。企業単位のトライアルであれば求人の削除では回避できないが、そもそもシンプルさを優先しトライアル自体を撤廃した。
+
+**2026-08-05追記**: `users.birth_date`を追加した(v1→v2移行時点では要件のプロフィール項目に含まれず一度削除していたもの)。企業側の応募者一覧・詳細で年齢を確認できるようにする要件が追加されたため復活させ、18〜60歳の範囲でバリデーションする。pre-launch段階のため、新規ALTERマイグレーションではなく`users`作成マイグレーションを直接編集し`migrate:fresh`で反映した。
 
 ## 6. 未決事項
 
