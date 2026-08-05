@@ -9,6 +9,7 @@ use App\Http\Controllers\Companies\LikeController as CompanyLikeController;
 use App\Http\Controllers\Companies\MessageController as CompanyMessageController;
 use App\Http\Controllers\Companies\NotificationController as CompanyNotificationController;
 use App\Http\Controllers\Companies\ProfileController as CompanyProfileController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JobPostingController;
 use App\Http\Controllers\Users\CertificationController;
 use App\Http\Controllers\Users\EducationController;
@@ -84,3 +85,5 @@ Route::prefix('companies')->name('companies.')->group(function () {
         Route::patch('notifications/{notification}/read', [CompanyNotificationController::class, 'markAsRead'])->name('notifications.read');
     });
 });
+
+Route::get('companies/{company}', [CompanyController::class, 'show'])->name('companies.show');

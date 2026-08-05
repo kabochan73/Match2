@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Companies;
 use App\Enums\Prefecture;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Services\RevalidationService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
+    public function __construct(private RevalidationService $revalidationService) {}
+
     public function show(Request $request): Company
     {
         return $request->user();
@@ -26,6 +29,8 @@ class ProfileController extends Controller
             'prefecture' => ['nullable', Rule::enum(Prefecture::class)],
             'address_line' => ['nullable', 'string', 'max:255'],
         ]));
+
+        $this->revalidationService->company($company);
 
         return $company;
     }

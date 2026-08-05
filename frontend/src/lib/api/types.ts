@@ -70,6 +70,14 @@ export type JobPosting = {
   };
 };
 
+export type CompanyProfile = {
+  id: number;
+  name: string;
+  description: string | null;
+  prefecture: string | null;
+  address_line: string | null;
+};
+
 export type JobPostingStatus = "draft" | "published" | "unpublished" | "closed";
 
 export type CompanyJobPosting = {
