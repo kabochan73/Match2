@@ -51,7 +51,7 @@ export function ApplyForm({ onSubmit, remaining }: ApplyFormProps) {
   });
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-3 rounded border p-4">
+    <form onSubmit={submit} noValidate className="flex flex-col gap-3">
       <h2 className="text-lg font-medium">この求人に応募する</h2>
 
       {formError && <p className="text-sm text-red-600">{formError}</p>}
