@@ -125,6 +125,21 @@ it('allows a standard like even when the super like limit is reached', function 
         ->assertCreated();
 });
 
+it('reports remaining monthly like counts', function () {
+    $user = User::factory()->create();
+
+    Like::factory()->for($user)->count(3)->create();
+    Like::factory()->for($user)->super()->create();
+
+    $this->actingAs($user, 'web')
+        ->getJson('/api/users/likes/remaining')
+        ->assertOk()
+        ->assertJson([
+            'standard' => ['limit' => 10, 'used' => 3, 'remaining' => 7],
+            'super' => ['limit' => 1, 'used' => 1, 'remaining' => 0],
+        ]);
+});
+
 it('forbids viewing another user\'s like', function () {
     $owner = User::factory()->create();
     $intruder = User::factory()->create();

@@ -114,6 +114,8 @@ export type Like = {
   };
 };
 
+export type LikeRemaining = Record<LikeType, { limit: number; used: number; remaining: number }>;
+
 export type CompanyLike = {
   id: number;
   user_id: number;

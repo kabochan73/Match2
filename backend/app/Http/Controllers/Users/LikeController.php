@@ -31,6 +31,14 @@ class LikeController extends Controller
         return $like->load('jobPosting.company');
     }
 
+    /**
+     * @return array<value-of<LikeType>, array{limit: int, used: int, remaining: int}>
+     */
+    public function remaining(Request $request, LikeService $service): array
+    {
+        return $service->remaining($request->user());
+    }
+
     public function store(Request $request, LikeService $service): Like
     {
         $validated = $request->validate([

@@ -4,7 +4,13 @@ import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { userMeQueryOptions } from "@/lib/seeker/users";
 import { companyMeQueryOptions } from "@/lib/auth/companies";
-import { createSeekerLike, seekerLikesQueryKey, seekerLikesQueryOptions } from "@/lib/seeker/likes/api";
+import {
+  createSeekerLike,
+  seekerLikesQueryKey,
+  seekerLikesQueryOptions,
+  seekerLikesRemainingQueryKey,
+  seekerLikesRemainingQueryOptions,
+} from "@/lib/seeker/likes/api";
 import { LIKE_STATUS_LABELS } from "@/lib/seeker/likes/schemas";
 import { ApplyForm } from "@/components/seeker/jobs/ApplyForm";
 
@@ -14,6 +20,7 @@ export function ApplySection({ jobPostingId }: { jobPostingId: number }) {
   const { data: user } = useQuery(userMeQueryOptions);
   const { data: company } = useQuery(companyMeQueryOptions);
   const { data: likes } = useQuery({ ...seekerLikesQueryOptions, enabled: !!user });
+  const { data: remaining } = useQuery({ ...seekerLikesRemainingQueryOptions, enabled: !!user });
   const queryClient = useQueryClient();
 
   if (company) return null;
@@ -40,9 +47,11 @@ export function ApplySection({ jobPostingId }: { jobPostingId: number }) {
 
   return (
     <ApplyForm
+      remaining={remaining}
       onSubmit={async (data) => {
         await createSeekerLike({ ...data, job_posting_id: jobPostingId });
         await queryClient.invalidateQueries({ queryKey: seekerLikesQueryKey });
+        await queryClient.invalidateQueries({ queryKey: seekerLikesRemainingQueryKey });
       }}
     />
   );

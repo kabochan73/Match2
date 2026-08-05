@@ -1,5 +1,5 @@
 import { apiClientFetch } from "@/lib/api/client";
-import type { Like, Message } from "@/lib/api/types";
+import type { Like, LikeRemaining, Message } from "@/lib/api/types";
 import type { ApplyLikeInput } from "./schemas";
 
 export const seekerLikesQueryKey = ["likes"] as const;
@@ -22,6 +22,20 @@ export function createSeekerLike(
 export const seekerLikesQueryOptions = {
   queryKey: seekerLikesQueryKey,
   queryFn: fetchSeekerLikes,
+  staleTime: Infinity,
+};
+
+export const seekerLikesRemainingQueryKey = ["likes", "remaining"] as const;
+
+export function fetchSeekerLikesRemaining(): Promise<LikeRemaining> {
+  return apiClientFetch<LikeRemaining>("/api/users/likes/remaining");
+}
+
+// Changes only when a like is created (which invalidates this key), so no
+// background refetching is needed.
+export const seekerLikesRemainingQueryOptions = {
+  queryKey: seekerLikesRemainingQueryKey,
+  queryFn: fetchSeekerLikesRemaining,
   staleTime: Infinity,
 };
 

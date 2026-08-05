@@ -43,6 +43,7 @@ Route::prefix('users')->name('users.')->group(function () {
         Route::apiResource('certifications', CertificationController::class)
             ->only(['index', 'store', 'update', 'destroy']);
 
+        Route::get('likes/remaining', [UserLikeController::class, 'remaining'])->name('likes.remaining');
         Route::apiResource('likes', UserLikeController::class)
             ->only(['index', 'show', 'store']);
 

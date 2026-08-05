@@ -33,12 +33,8 @@ class LikeService
             ]);
         }
 
-        $limit = $likeType === LikeType::Super ? self::SUPER_MONTHLY_LIMIT : self::STANDARD_MONTHLY_LIMIT;
-
-        $monthlyCount = $user->likes()
-            ->where('like_type', $likeType)
-            ->whereBetween('applied_at', [now()->startOfMonth(), now()->endOfMonth()])
-            ->count();
+        $limit = $this->monthlyLimit($likeType);
+        $monthlyCount = $this->monthlyCount($user, $likeType);
 
         if ($monthlyCount >= $limit) {
             throw ValidationException::withMessages([
@@ -60,6 +56,36 @@ class LikeService
         $jobPosting->company->notify(new NewLikeReceived($like));
 
         return $like;
+    }
+
+    /**
+     * @return array<value-of<LikeType>, array{limit: int, used: int, remaining: int}>
+     */
+    public function remaining(User $user): array
+    {
+        return collect(LikeType::cases())->mapWithKeys(function (LikeType $likeType) use ($user) {
+            $limit = $this->monthlyLimit($likeType);
+            $used = $this->monthlyCount($user, $likeType);
+
+            return [$likeType->value => [
+                'limit' => $limit,
+                'used' => $used,
+                'remaining' => max(0, $limit - $used),
+            ]];
+        })->all();
+    }
+
+    private function monthlyLimit(LikeType $likeType): int
+    {
+        return $likeType === LikeType::Super ? self::SUPER_MONTHLY_LIMIT : self::STANDARD_MONTHLY_LIMIT;
+    }
+
+    private function monthlyCount(User $user, LikeType $likeType): int
+    {
+        return $user->likes()
+            ->where('like_type', $likeType)
+            ->whereBetween('applied_at', [now()->startOfMonth(), now()->endOfMonth()])
+            ->count();
     }
 
     public function match(Like $like): Like
