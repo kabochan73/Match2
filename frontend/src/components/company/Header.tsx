@@ -13,7 +13,7 @@ const NAV_LINKS = [
 export function Header() {
   return (
     <header className="flex w-full items-center justify-between border-b px-6 py-4">
-      <Link href="/companies/dashboard" className="text-lg font-semibold">
+      <Link href="/companies/job-postings" className="text-lg font-semibold">
         Match Portfolio
       </Link>
 
