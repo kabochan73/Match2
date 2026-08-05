@@ -13,6 +13,8 @@ export function LikesView() {
 
   const { data: jobPostings } = useQuery(companyJobPostingsQueryOptions);
   const { data: likes } = useQuery(companyLikesQueryOptions(jobPostingId));
+  // マッチ済みはメッセージ画面に移動するので、ここでは表示しない。
+  const unmatched = likes?.filter((like) => like.status !== "matched") ?? [];
 
   return (
     <main className="flex w-full flex-1 flex-col items-center gap-6 py-8">
@@ -35,8 +37,8 @@ export function LikesView() {
       </div>
 
       <div className="flex w-full max-w-2xl flex-col gap-3">
-        {likes && likes.length > 0 ? (
-          likes.map((like) => (
+        {unmatched.length > 0 ? (
+          unmatched.map((like) => (
             <Link
               key={like.id}
               href={`/companies/likes/${like.id}`}
