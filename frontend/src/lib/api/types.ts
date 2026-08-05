@@ -174,6 +174,7 @@ export type AppNotification = {
   type: string;
   data: {
     like_id: number;
+    job_posting_id: number;
     message: string;
     [key: string]: unknown;
   };

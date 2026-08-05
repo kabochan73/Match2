@@ -64,8 +64,11 @@ export default function SeekerMessageThreadPage() {
       <section className="flex w-full max-w-2xl flex-col gap-2">
         <h1 className="text-lg font-medium">{like.job_posting.title}</h1>
         <span className="text-sm text-gray-600">{like.job_posting.company.name}</span>
-        <Link href={`/likes/${likeId}`} className="w-fit text-sm text-blue-600 underline">
-          応募詳細を見る
+        <Link
+          href={`/jobs/${like.job_posting.id}`}
+          className="w-fit text-sm text-blue-600 underline"
+        >
+          求人詳細を見る
         </Link>
       </section>
 

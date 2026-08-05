@@ -5,6 +5,12 @@ import { useQuery } from "@tanstack/react-query";
 import { seekerLikesQueryOptions } from "@/lib/seeker/likes/api";
 import { LIKE_STATUS_LABELS, LIKE_TYPE_LABELS } from "@/lib/seeker/likes/schemas";
 
+function formatRemainingDays(deadline: string): string {
+  const diffMs = new Date(deadline).getTime() - Date.now();
+  const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  return days <= 0 ? "本日まで" : `残り${days}日`;
+}
+
 export default function SeekerLikesPage() {
   const { data: likes } = useQuery(seekerLikesQueryOptions);
 
@@ -19,7 +25,7 @@ export default function SeekerLikesPage() {
           likes.map((like) => (
             <Link
               key={like.id}
-              href={`/likes/${like.id}`}
+              href={`/jobs/${like.job_posting_id}`}
               className="flex items-center justify-between rounded border p-4"
             >
               <div className="flex flex-col gap-1">
@@ -27,7 +33,14 @@ export default function SeekerLikesPage() {
                 <span className="text-sm text-gray-600">{like.job_posting.company.name}</span>
                 <span className="text-xs text-gray-500">{LIKE_TYPE_LABELS[like.like_type]}</span>
               </div>
-              <span className="text-sm text-gray-600">{LIKE_STATUS_LABELS[like.status]}</span>
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-sm text-gray-600">{LIKE_STATUS_LABELS[like.status]}</span>
+                {like.status === "applied" && (
+                  <span className="text-xs text-gray-500">
+                    {formatRemainingDays(like.response_deadline)}
+                  </span>
+                )}
+              </div>
             </Link>
           ))
         ) : (

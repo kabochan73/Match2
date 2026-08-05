@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { userMeQueryOptions } from "@/lib/seeker/users";
 import { companyMeQueryOptions } from "@/lib/auth/companies";
@@ -16,7 +15,6 @@ export function ApplySection({ jobPostingId }: { jobPostingId: number }) {
   const { data: company } = useQuery(companyMeQueryOptions);
   const { data: likes } = useQuery({ ...seekerLikesQueryOptions, enabled: !!user });
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   if (company) return null;
 
@@ -34,11 +32,8 @@ export function ApplySection({ jobPostingId }: { jobPostingId: number }) {
 
   if (existingLike) {
     return (
-      <div className="flex items-center gap-2 rounded border p-4 text-sm text-gray-600">
-        <span>応募済み({LIKE_STATUS_LABELS[existingLike.status]})</span>
-        <Link href={`/likes/${existingLike.id}`} className="text-blue-600 underline">
-          詳細を見る
-        </Link>
+      <div className="rounded border p-4 text-sm text-gray-600">
+        応募済み({LIKE_STATUS_LABELS[existingLike.status]})
       </div>
     );
   }
@@ -46,9 +41,8 @@ export function ApplySection({ jobPostingId }: { jobPostingId: number }) {
   return (
     <ApplyForm
       onSubmit={async (data) => {
-        const like = await createSeekerLike({ ...data, job_posting_id: jobPostingId });
+        await createSeekerLike({ ...data, job_posting_id: jobPostingId });
         await queryClient.invalidateQueries({ queryKey: seekerLikesQueryKey });
-        router.push(`/likes/${like.id}`);
       }}
     />
   );

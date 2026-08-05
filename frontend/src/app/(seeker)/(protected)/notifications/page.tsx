@@ -41,8 +41,11 @@ export default function SeekerNotificationsPage() {
                 if (notification.read_at === null) {
                   markAsReadMutation.mutate(notification.id);
                 }
-                const path = isMessageNotification(notification) ? "messages" : "likes";
-                router.push(`/${path}/${notification.data.like_id}`);
+                if (isMessageNotification(notification)) {
+                  router.push(`/messages/${notification.data.like_id}`);
+                } else {
+                  router.push(`/jobs/${notification.data.job_posting_id}`);
+                }
               }}
               className={`flex flex-col gap-1 rounded border p-4 text-left ${
                 notification.read_at === null ? "bg-blue-50" : ""
