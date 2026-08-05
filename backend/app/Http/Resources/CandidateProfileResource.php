@@ -29,6 +29,7 @@ class CandidateProfileResource extends JsonResource
                 'name' => $this->user->name,
                 'comment' => $this->user->comment,
                 'portfolio_url' => $this->user->portfolio_url,
+                'birth_date' => $this->user->birth_date,
                 'work_experiences' => $this->user->workExperiences,
                 'educations' => $this->user->educations,
                 'certifications' => $this->user->certifications,

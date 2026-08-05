@@ -24,6 +24,7 @@ it('updates the authenticated user profile', function () {
             'name' => 'New Name',
             'comment' => 'Updated comment',
             'portfolio_url' => 'https://example.com/portfolio',
+            'birth_date' => '1990-01-01',
         ])
         ->assertOk()
         ->assertJsonPath('name', 'New Name');
@@ -31,7 +32,8 @@ it('updates the authenticated user profile', function () {
     expect($user->fresh())
         ->name->toBe('New Name')
         ->comment->toBe('Updated comment')
-        ->portfolio_url->toBe('https://example.com/portfolio');
+        ->portfolio_url->toBe('https://example.com/portfolio')
+        ->birth_date->toDateString()->toBe('1990-01-01');
 });
 
 it('validates the profile update payload', function () {

@@ -7,6 +7,7 @@ import { workExperiencesQueryOptions } from "@/lib/seeker/work-experiences/api";
 import { EMPLOYMENT_TYPE_OPTIONS } from "@/lib/seeker/work-experiences/schemas";
 import { educationsQueryOptions } from "@/lib/seeker/educations/api";
 import { certificationsQueryOptions } from "@/lib/seeker/certifications/api";
+import { calculateAge } from "@/lib/age";
 
 const EMPLOYMENT_TYPE_LABELS = Object.fromEntries(
   EMPLOYMENT_TYPE_OPTIONS.map((option) => [option.value, option.label]),
@@ -32,6 +33,7 @@ export default function MyPage() {
       <section className="flex w-full max-w-2xl flex-col gap-2">
         <h2 className="text-lg font-medium">基本情報</h2>
         <p className="font-medium">{user.name}</p>
+        <p className="text-sm text-gray-600">{calculateAge(user.birth_date)}歳</p>
         {user.comment && (
           <p className="whitespace-pre-wrap text-sm text-gray-600">{user.comment}</p>
         )}

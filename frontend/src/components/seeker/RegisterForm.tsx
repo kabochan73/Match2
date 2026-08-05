@@ -1,35 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { profileSchema, type ProfileInput } from "@/lib/seeker/users";
+import { userRegisterSchema, type UserRegisterInput } from "@/lib/seeker/users";
 import { applyServerValidationErrors } from "@/lib/api/validation";
 
-type ProfileFormProps = {
-  defaultValues: ProfileInput;
-  onSubmit: (data: ProfileInput) => Promise<void>;
+type RegisterFormProps = {
+  onSubmit: (data: UserRegisterInput) => Promise<void>;
+  loginHref: string;
 };
 
-export function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
+export function RegisterForm({ onSubmit, loginHref }: RegisterFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<ProfileInput>({
-    resolver: zodResolver(profileSchema),
-    defaultValues,
-  });
+  } = useForm<UserRegisterInput>({ resolver: zodResolver(userRegisterSchema) });
 
   const submit = handleSubmit(async (data) => {
     setFormError(null);
-    setSaved(false);
     try {
       await onSubmit(data);
-      setSaved(true);
     } catch (error) {
       const message = applyServerValidationErrors(error, setError);
       if (message) setFormError(message);
@@ -39,7 +34,6 @@ export function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
   return (
     <form onSubmit={submit} noValidate className="flex w-full max-w-sm flex-col gap-4">
       {formError && <p className="text-sm text-red-600">{formError}</p>}
-      {saved && <p className="text-sm text-green-600">保存しました</p>}
 
       <div className="flex flex-col gap-1">
         <label htmlFor="name" className="text-sm font-medium">
@@ -58,17 +52,18 @@ export function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="comment" className="text-sm font-medium">
-          自己紹介
+        <label htmlFor="email" className="text-sm font-medium">
+          メールアドレス
         </label>
-        <textarea
-          id="comment"
-          rows={4}
+        <input
+          id="email"
+          type="email"
+          autoComplete="email"
           className="rounded border px-3 py-2"
-          {...register("comment")}
+          {...register("email")}
         />
-        {errors.comment && (
-          <p className="text-sm text-red-600">{errors.comment.message}</p>
+        {errors.email && (
+          <p className="text-sm text-red-600">{errors.email.message}</p>
         )}
       </div>
 
@@ -88,18 +83,36 @@ export function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="portfolio_url" className="text-sm font-medium">
-          ポートフォリオURL
+        <label htmlFor="password" className="text-sm font-medium">
+          パスワード
         </label>
         <input
-          id="portfolio_url"
-          type="text"
-          inputMode="url"
+          id="password"
+          type="password"
+          autoComplete="new-password"
           className="rounded border px-3 py-2"
-          {...register("portfolio_url")}
+          {...register("password")}
         />
-        {errors.portfolio_url && (
-          <p className="text-sm text-red-600">{errors.portfolio_url.message}</p>
+        {errors.password && (
+          <p className="text-sm text-red-600">{errors.password.message}</p>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="password_confirmation" className="text-sm font-medium">
+          パスワード(確認用)
+        </label>
+        <input
+          id="password_confirmation"
+          type="password"
+          autoComplete="new-password"
+          className="rounded border px-3 py-2"
+          {...register("password_confirmation")}
+        />
+        {errors.password_confirmation && (
+          <p className="text-sm text-red-600">
+            {errors.password_confirmation.message}
+          </p>
         )}
       </div>
 
@@ -108,8 +121,15 @@ export function ProfileForm({ defaultValues, onSubmit }: ProfileFormProps) {
         disabled={isSubmitting}
         className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
       >
-        {isSubmitting ? "保存中..." : "保存する"}
+        {isSubmitting ? "登録中..." : "登録する"}
       </button>
+
+      <p className="text-sm">
+        すでにアカウントをお持ちの方は{" "}
+        <Link href={loginHref} className="underline">
+          ログイン
+        </Link>
+      </p>
     </form>
   );
 }

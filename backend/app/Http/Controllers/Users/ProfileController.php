@@ -21,6 +21,12 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:50'],
             'comment' => ['nullable', 'string', 'max:200'],
             'portfolio_url' => ['nullable', 'string', 'url', 'max:255'],
+            'birth_date' => [
+                'required',
+                'date',
+                'before_or_equal:'.now()->subYears(18)->toDateString(),
+                'after_or_equal:'.now()->subYears(60)->toDateString(),
+            ],
         ]));
 
         return $user;

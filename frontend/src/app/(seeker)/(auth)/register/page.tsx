@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { RegisterForm } from "@/components/auth/RegisterForm";
+import { RegisterForm } from "@/components/seeker/RegisterForm";
 import { registerUser, userMeQueryKey } from "@/lib/seeker/users";
 
 export default function SeekerRegisterPage() {

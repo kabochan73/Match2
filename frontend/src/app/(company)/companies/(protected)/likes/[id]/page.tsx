@@ -13,6 +13,7 @@ import {
 import { LIKE_STATUS_LABELS, LIKE_TYPE_LABELS } from "@/lib/company/likes/schemas";
 import { EMPLOYMENT_TYPE_OPTIONS } from "@/lib/seeker/work-experiences/schemas";
 import { getErrorMessage } from "@/lib/api/validation";
+import { calculateAge } from "@/lib/age";
 
 const EMPLOYMENT_TYPE_LABELS = Object.fromEntries(
   EMPLOYMENT_TYPE_OPTIONS.map((option) => [option.value, option.label]),
@@ -60,6 +61,7 @@ export default function CompanyLikePage() {
         <div className="flex flex-col gap-2">
           <span className="text-sm text-gray-500">{LIKE_STATUS_LABELS[like.status]}</span>
           <h1 className="text-2xl font-semibold">{like.user.name}</h1>
+          <span className="text-sm text-gray-600">{calculateAge(like.user.birth_date)}歳</span>
           <span className="text-xs text-gray-500">{LIKE_TYPE_LABELS[like.like_type]}</span>
           {like.user.comment && (
             <p className="whitespace-pre-wrap text-sm text-gray-600">{like.user.comment}</p>

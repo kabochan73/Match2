@@ -4,6 +4,7 @@ export type User = {
   email: string;
   comment: string | null;
   portfolio_url: string | null;
+  birth_date: string;
   created_at: string;
   updated_at: string;
 };
@@ -132,6 +133,7 @@ export type CompanyLike = {
   user: {
     id: number;
     name: string;
+    birth_date: string;
   };
 };
 
@@ -148,6 +150,7 @@ export type CandidateProfile = {
     name: string;
     comment: string | null;
     portfolio_url: string | null;
+    birth_date: string;
     work_experiences: WorkExperience[];
     educations: Education[];
     certifications: Certification[];

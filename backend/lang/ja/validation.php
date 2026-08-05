@@ -168,6 +168,7 @@ return [
         'password_confirmation' => 'パスワード(確認用)',
         'comment' => '自己紹介コメント',
         'portfolio_url' => 'ポートフォリオURL',
+        'birth_date' => '生年月日',
         'description' => '会社概要',
         'phone_number' => '電話番号',
         'prefecture' => '都道府県',

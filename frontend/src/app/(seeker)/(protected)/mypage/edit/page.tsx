@@ -101,6 +101,7 @@ export default function MyPageEditPage() {
             name: user.name,
             comment: user.comment ?? "",
             portfolio_url: user.portfolio_url ?? "",
+            birth_date: user.birth_date.slice(0, 10),
           }}
           onSubmit={async (data) => {
             const updated = await updateUserProfile(data);

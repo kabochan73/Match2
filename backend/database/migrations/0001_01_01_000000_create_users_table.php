@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('comment', 200)->nullable();
             $table->string('portfolio_url')->nullable();
+            $table->date('birth_date');
             $table->timestamps();
         });
 

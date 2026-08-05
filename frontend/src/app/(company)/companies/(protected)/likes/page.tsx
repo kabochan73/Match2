@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { companyLikesQueryOptions } from "@/lib/company/likes/api";
 import { LIKE_STATUS_LABELS, LIKE_TYPE_LABELS } from "@/lib/company/likes/schemas";
 import { companyJobPostingsQueryOptions } from "@/lib/company/job-postings/api";
+import { calculateAge } from "@/lib/age";
 
 export default function CompanyLikesPage() {
   const [jobPostingId, setJobPostingId] = useState<number | undefined>(undefined);
@@ -42,7 +43,9 @@ export default function CompanyLikesPage() {
               className="flex items-center justify-between rounded border p-4"
             >
               <div className="flex flex-col gap-1">
-                <span className="font-medium">{like.user.name}</span>
+                <span className="font-medium">
+                  {like.user.name}({calculateAge(like.user.birth_date)}歳)
+                </span>
                 <span className="text-sm text-gray-600">{like.job_posting.title}</span>
                 <span className="text-xs text-gray-500">{LIKE_TYPE_LABELS[like.like_type]}</span>
               </div>
