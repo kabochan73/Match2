@@ -20,10 +20,17 @@ export function MessagesView() {
             <Link
               key={like.id}
               href={`/companies/messages/${like.id}`}
-              className="flex flex-col gap-1 rounded border p-4"
+              className="flex items-center justify-between gap-1 rounded border p-4"
             >
-              <span className="font-medium">{like.user.name}</span>
-              <span className="text-sm text-gray-600">{like.job_posting.title}</span>
+              <div className="flex flex-col gap-1">
+                <span className="font-medium">{like.user.name}</span>
+                <span className="text-sm text-gray-600">{like.job_posting.title}</span>
+              </div>
+              {like.unread_messages_count > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1.5 text-xs font-medium text-white">
+                  {like.unread_messages_count}
+                </span>
+              )}
             </Link>
           ))
         ) : (

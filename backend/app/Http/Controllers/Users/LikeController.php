@@ -21,7 +21,12 @@ class LikeController extends Controller
      */
     public function index(Request $request): Collection
     {
-        return $request->user()->likes()->with('jobPosting.company')->get();
+        return $request->user()->likes()
+            ->with('jobPosting.company')
+            ->withCount(['messages as unread_messages_count' => function ($query) {
+                $query->where('sender_type', 'company')->whereNull('read_at');
+            }])
+            ->get();
     }
 
     public function show(Like $like): Like

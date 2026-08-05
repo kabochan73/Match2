@@ -4,6 +4,7 @@ use App\Enums\LikeStatus;
 use App\Models\Company;
 use App\Models\JobPosting;
 use App\Models\Like;
+use App\Models\Message;
 
 it('lists only likes for the authenticated company\'s job postings', function () {
     $company = Company::factory()->create();
@@ -19,6 +20,22 @@ it('lists only likes for the authenticated company\'s job postings', function ()
         ->getJson('/api/companies/likes')
         ->assertOk()
         ->assertJsonCount(1);
+});
+
+it('includes the unread message count from the user in the index', function () {
+    $company = Company::factory()->create();
+    $jobPosting = JobPosting::factory()->for($company)->create();
+    $like = Like::factory()->for($jobPosting)->matched()->create();
+
+    Message::factory()->for($like)->create(['sender_type' => 'user', 'read_at' => null]);
+    Message::factory()->for($like)->create(['sender_type' => 'user', 'read_at' => null]);
+    Message::factory()->for($like)->create(['sender_type' => 'user', 'read_at' => now()]);
+    Message::factory()->for($like)->create(['sender_type' => 'company', 'read_at' => null]);
+
+    $this->actingAs($company, 'companies')
+        ->getJson('/api/companies/likes')
+        ->assertOk()
+        ->assertJsonPath('0.unread_messages_count', 2);
 });
 
 it('shows the applicant profile including career details', function () {

@@ -27,6 +27,9 @@ class LikeController extends Controller
             ->whereHas('jobPosting', fn ($query) => $query->where('company_id', $request->user()->id))
             ->when($validated['job_posting_id'] ?? null, fn ($query, $jobPostingId) => $query->where('job_posting_id', $jobPostingId))
             ->with(['user', 'jobPosting'])
+            ->withCount(['messages as unread_messages_count' => function ($query) {
+                $query->where('sender_type', 'user')->whereNull('read_at');
+            }])
             ->get();
     }
 

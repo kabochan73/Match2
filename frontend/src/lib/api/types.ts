@@ -112,6 +112,7 @@ export type Like = {
       name: string;
     };
   };
+  unread_messages_count: number;
 };
 
 export type LikeRemaining = Record<LikeType, { limit: number; used: number; remaining: number }>;
@@ -137,6 +138,7 @@ export type CompanyLike = {
     name: string;
     birth_date: string;
   };
+  unread_messages_count: number;
 };
 
 export type CandidateProfile = {

@@ -1,8 +1,10 @@
 <?php
 
 use App\Enums\LikeStatus;
+use App\Models\Company;
 use App\Models\JobPosting;
 use App\Models\Like;
+use App\Models\Message;
 use App\Models\User;
 
 it('lists only the authenticated user\'s likes', function () {
@@ -123,6 +125,23 @@ it('allows a standard like even when the super like limit is reached', function 
             'motivation' => '志望動機です。',
         ])
         ->assertCreated();
+});
+
+it('includes the unread message count from the company in the index', function () {
+    $user = User::factory()->create();
+    $company = Company::factory()->create();
+    $jobPosting = JobPosting::factory()->for($company)->create();
+    $like = Like::factory()->for($user)->for($jobPosting)->matched()->create();
+
+    Message::factory()->for($like)->create(['sender_type' => 'company', 'read_at' => null]);
+    Message::factory()->for($like)->create(['sender_type' => 'company', 'read_at' => null]);
+    Message::factory()->for($like)->create(['sender_type' => 'company', 'read_at' => now()]);
+    Message::factory()->for($like)->create(['sender_type' => 'user', 'read_at' => null]);
+
+    $this->actingAs($user, 'web')
+        ->getJson('/api/users/likes')
+        ->assertOk()
+        ->assertJsonPath('0.unread_messages_count', 2);
 });
 
 it('reports remaining monthly like counts', function () {
