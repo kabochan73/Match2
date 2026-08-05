@@ -62,12 +62,8 @@ export function MessageThreadView() {
       </div>
 
       <section className="flex w-full max-w-2xl flex-col gap-2">
-        <h1 className="text-lg font-medium">{like.user.name}</h1>
-        <Link
-          href={`/companies/likes/${likeId}`}
-          className="w-fit text-sm text-blue-600 underline"
-        >
-          応募者詳細を見る
+        <Link href={`/companies/likes/${likeId}`} className="w-fit">
+          <h1 className="text-lg font-medium text-blue-600 underline">{like.user.name}</h1>
         </Link>
       </section>
 
