@@ -29,6 +29,11 @@ class JobPostingResource extends JsonResource
             'company' => [
                 'id' => $this->company->id,
                 'name' => $this->company->name,
+                'email' => $this->company->email,
+                'prefecture' => $this->company->prefecture,
+                'address_line' => $this->company->address_line,
+                'founded_year' => $this->company->founded_year,
+                'member_count_range' => $this->company->member_count_range,
             ],
         ];
     }

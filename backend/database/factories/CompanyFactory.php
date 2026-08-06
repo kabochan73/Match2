@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\MemberCountRange;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +32,8 @@ class CompanyFactory extends Factory
             'phone_number' => fake()->numerify('03-####-####'),
             'prefecture' => '東京',
             'address_line' => fake()->streetAddress(),
+            'founded_year' => fake()->numberBetween(1950, 2025),
+            'member_count_range' => fake()->randomElement(MemberCountRange::cases()),
         ];
     }
 }

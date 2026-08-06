@@ -19,9 +19,12 @@ class CompanyProfileResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'email' => $this->email,
             'description' => $this->description,
             'prefecture' => $this->prefecture,
             'address_line' => $this->address_line,
+            'founded_year' => $this->founded_year,
+            'member_count_range' => $this->member_count_range,
         ];
     }
 }

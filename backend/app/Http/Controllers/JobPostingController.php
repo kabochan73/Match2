@@ -41,7 +41,7 @@ class JobPostingController extends Controller
     {
         return new JobPostingResource(
             JobPosting::query()
-                ->with('company:id,name')
+                ->with('company:id,name,email,prefecture,address_line,founded_year,member_count_range')
                 ->where('status', JobPostingStatus::Published)
                 ->findOrFail($jobPosting)
         );

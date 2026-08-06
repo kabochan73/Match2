@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('prefecture')->nullable();
             $table->string('address_line')->nullable();
+            $table->unsignedSmallInteger('founded_year')->nullable();
+            $table->string('member_count_range')->nullable();
 
             // Laravel Cashier (Billable)
             $table->string('stripe_id')->nullable()->unique();

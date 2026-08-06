@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MemberCountRange;
 use App\Enums\Prefecture;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -11,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 
-#[Fillable(['name', 'email', 'password', 'description', 'phone_number', 'prefecture', 'address_line'])]
+#[Fillable(['name', 'email', 'password', 'description', 'phone_number', 'prefecture', 'address_line', 'founded_year', 'member_count_range'])]
 #[Hidden(['password'])]
 class Company extends Authenticatable
 {
@@ -27,6 +28,7 @@ class Company extends Authenticatable
         return [
             'password' => 'hashed',
             'prefecture' => Prefecture::class,
+            'member_count_range' => MemberCountRange::class,
         ];
     }
 

@@ -1,8 +1,11 @@
 import { z } from "zod";
 import { apiClientFetch } from "@/lib/api/client";
 import type { Company } from "@/lib/api/types";
+import { MEMBER_COUNT_RANGE_VALUES } from "@/lib/company/member-count-range";
 import { PREFECTURES } from "@/lib/prefectures";
 import type { LoginInput, RegisterInput } from "./schemas";
+
+const currentYear = new Date().getFullYear();
 
 export const companyProfileSchema = z.object({
   name: z
@@ -17,6 +20,14 @@ export const companyProfileSchema = z.object({
   address_line: z
     .union([z.literal(""), z.string().max(255, "住所は255文字以内で入力してください")])
     .optional(),
+  founded_year: z
+    .union([z.literal(""), z.string().regex(/^\d+$/, "設立年は数字で入力してください")])
+    .optional()
+    .refine(
+      (value) => !value || (Number(value) >= 1800 && Number(value) <= currentYear),
+      "設立年が正しくありません",
+    ),
+  member_count_range: z.union([z.literal(""), z.enum(MEMBER_COUNT_RANGE_VALUES)]).optional(),
 });
 export type CompanyProfileInput = z.infer<typeof companyProfileSchema>;
 
@@ -29,6 +40,8 @@ export function updateCompanyProfile(input: CompanyProfileInput): Promise<Compan
       phone_number: input.phone_number || null,
       prefecture: input.prefecture || null,
       address_line: input.address_line || null,
+      founded_year: input.founded_year ? Number(input.founded_year) : null,
+      member_count_range: input.member_count_range || null,
     }),
   });
 }

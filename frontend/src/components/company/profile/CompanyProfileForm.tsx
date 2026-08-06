@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { companyProfileSchema, type CompanyProfileInput } from "@/lib/auth/companies";
+import { MEMBER_COUNT_RANGE_OPTIONS } from "@/lib/company/member-count-range";
 import { PREFECTURE_OPTIONS } from "@/lib/prefectures";
 import { applyServerValidationErrors } from "@/lib/api/validation";
 
@@ -121,6 +122,42 @@ export function CompanyProfileForm({ defaultValues, onSubmit }: CompanyProfileFo
         />
         {errors.address_line && (
           <p className="text-sm text-red-600">{errors.address_line.message}</p>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="founded_year" className="text-sm font-medium">
+          設立年
+        </label>
+        <input
+          id="founded_year"
+          type="number"
+          className="rounded border px-3 py-2"
+          {...register("founded_year")}
+        />
+        {errors.founded_year && (
+          <p className="text-sm text-red-600">{errors.founded_year.message}</p>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="member_count_range" className="text-sm font-medium">
+          メンバー数
+        </label>
+        <select
+          id="member_count_range"
+          className="rounded border px-3 py-2"
+          {...register("member_count_range")}
+        >
+          <option value="">選択してください</option>
+          {MEMBER_COUNT_RANGE_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        {errors.member_count_range && (
+          <p className="text-sm text-red-600">{errors.member_count_range.message}</p>
         )}
       </div>
 

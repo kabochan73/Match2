@@ -32,6 +32,9 @@ export function ProfileEditView() {
           phone_number: company.phone_number ?? "",
           prefecture: (company.prefecture as CompanyProfileInput["prefecture"]) ?? "",
           address_line: company.address_line ?? "",
+          founded_year: company.founded_year ? String(company.founded_year) : "",
+          member_count_range:
+            (company.member_count_range as CompanyProfileInput["member_count_range"]) ?? "",
         }}
         onSubmit={async (data) => {
           const updated = await updateCompanyProfile(data);

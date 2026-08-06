@@ -38,6 +38,8 @@ export type Certification = {
   updated_at: string;
 };
 
+export type MemberCountRange = "1_10" | "11_50" | "51_100" | "101_300" | "301_plus";
+
 export type Company = {
   id: number;
   name: string;
@@ -46,6 +48,8 @@ export type Company = {
   phone_number: string | null;
   prefecture: string | null;
   address_line: string | null;
+  founded_year: number | null;
+  member_count_range: MemberCountRange | null;
   stripe_id: string | null;
   pm_type: string | null;
   pm_last_four: string | null;
@@ -67,15 +71,23 @@ export type JobPosting = {
   company: {
     id: number;
     name: string;
+    email: string;
+    prefecture: string | null;
+    address_line: string | null;
+    founded_year: number | null;
+    member_count_range: MemberCountRange | null;
   };
 };
 
 export type CompanyProfile = {
   id: number;
   name: string;
+  email: string;
   description: string | null;
   prefecture: string | null;
   address_line: string | null;
+  founded_year: number | null;
+  member_count_range: MemberCountRange | null;
 };
 
 export type JobPostingStatus = "draft" | "published" | "unpublished" | "closed";
