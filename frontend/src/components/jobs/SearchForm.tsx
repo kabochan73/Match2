@@ -55,7 +55,7 @@ export function SearchForm() {
       </select>
       <button
         type="submit"
-        className="rounded bg-brand px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600"
+        className="rounded bg-brand px-5 py-2 text-md font-bold text-white transition-colors hover:bg-sky-600 hover:cursor-pointer"
       >
         検索
       </button>

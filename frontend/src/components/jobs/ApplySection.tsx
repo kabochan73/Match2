@@ -42,8 +42,10 @@ export function ApplySection({ jobPostingId }: { jobPostingId: number }) {
 
   if (existingLike) {
     return (
-      <div className="rounded border p-4 text-sm text-gray-600">
-        応募済み({LIKE_STATUS_LABELS[existingLike.status]})
+      <div className="flex justify-end">
+        <div className="rounded border p-4 text-sm text-gray-600">
+          応募済み({LIKE_STATUS_LABELS[existingLike.status]})
+        </div>
       </div>
     );
   }

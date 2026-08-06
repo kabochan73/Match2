@@ -19,7 +19,7 @@ const STEPS = [
   {
     step: "4",
     title: "いいねをチェック",
-    description: "ポートフォリオを見て気になる求職者に「いいね」を送るとマッチング成立です。",
+    description: "気になる求職者に「いいね」を送るとマッチング成立です。",
   },
   {
     step: "5",
@@ -31,18 +31,20 @@ const STEPS = [
 export default function CompanyGuidePage() {
   return (
     <main className="flex flex-1 flex-col items-center">
-      <section className="flex w-full max-w-3xl flex-col items-center gap-6 px-6 py-20 text-center">
+      <section className="flex w-full max-w-3xl flex-col items-center gap-6 px-6 pt-20 pb-10 text-center">
         <h1 className="text-3xl font-bold">企業の方の使い方</h1>
         <p className="text-gray-600">
-          Tech Matchでは、求職者のポートフォリオを見ながら「いいね」を送るだけで、気になる人材とマッチングできます。
+          Tech Matchでは、予め求職者の色々な情報を見ながらマッチングができます。
         </p>
       </section>
 
       <section className="flex w-full max-w-3xl flex-col gap-8 px-6 pb-20">
         <div className="flex flex-col gap-6">
           {STEPS.map((item) => (
-            <div key={item.step} className="flex gap-4 rounded border p-6">
-              <span className="text-sm font-semibold text-gray-400">STEP {item.step}</span>
+            <div key={item.step} className="flex items-start gap-4 rounded border p-6">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">
+                {item.step}
+              </span>
               <div className="flex flex-col gap-1">
                 <h2 className="font-medium">{item.title}</h2>
                 <p className="text-sm text-gray-600">{item.description}</p>
@@ -52,10 +54,13 @@ export default function CompanyGuidePage() {
         </div>
 
         <div className="flex flex-col items-center gap-4 pt-4">
-          <Link href="/companies/register" className="rounded bg-black px-6 py-3 text-white">
+          <Link
+            href="/companies/register"
+            className="rounded bg-brand px-6 py-3 font-bold text-white transition-colors hover:bg-sky-600"
+          >
             新規登録に進む
           </Link>
-          <Link href="/companies/login" className="text-sm text-gray-500">
+          <Link href="/companies/login" className="text-sm text-gray-500 hover:text-brand">
             すでにアカウントをお持ちの方はこちら
           </Link>
         </div>
