@@ -41,7 +41,7 @@ export default function Home() {
             <Link href="/register" className="rounded bg-black px-6 py-3 text-white">
               求職者として始める
             </Link>
-            <Link href="/companies/register" className="rounded border px-6 py-3">
+            <Link href="/companies/guide" className="rounded border px-6 py-3">
               企業のご担当者様はこちら
             </Link>
           </div>
