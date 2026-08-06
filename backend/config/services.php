@@ -40,4 +40,8 @@ return [
         'revalidate_secret' => env('FRONTEND_REVALIDATE_SECRET'),
     ],
 
+    'stripe' => [
+        'price_id' => env('STRIPE_PRICE_ID'),
+    ],
+
 ];

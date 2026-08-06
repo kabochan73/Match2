@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\Companies\AuthController as CompanyAuthController;
 use App\Http\Controllers\Auth\Companies\PasswordResetController as CompanyPasswordResetController;
 use App\Http\Controllers\Auth\Users\AuthController as UserAuthController;
 use App\Http\Controllers\Auth\Users\PasswordResetController as UserPasswordResetController;
+use App\Http\Controllers\Companies\BillingController as CompanyBillingController;
 use App\Http\Controllers\Companies\JobPostingController as CompanyJobPostingController;
 use App\Http\Controllers\Companies\LikeController as CompanyLikeController;
 use App\Http\Controllers\Companies\MessageController as CompanyMessageController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Companies\NotificationController as CompanyNotification
 use App\Http\Controllers\Companies\ProfileController as CompanyProfileController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JobPostingController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\Users\CertificationController;
 use App\Http\Controllers\Users\EducationController;
 use App\Http\Controllers\Users\LikeController as UserLikeController;
@@ -83,7 +85,13 @@ Route::prefix('companies')->name('companies.')->group(function () {
 
         Route::get('notifications', [CompanyNotificationController::class, 'index'])->name('notifications.index');
         Route::patch('notifications/{notification}/read', [CompanyNotificationController::class, 'markAsRead'])->name('notifications.read');
+
+        Route::get('billing', [CompanyBillingController::class, 'show'])->name('billing.show');
+        Route::post('billing/checkout', [CompanyBillingController::class, 'checkout'])->name('billing.checkout');
+        Route::post('billing/portal', [CompanyBillingController::class, 'portal'])->name('billing.portal');
     });
 });
+
+Route::post('webhooks/stripe', [StripeWebhookController::class, 'handleWebhook'])->name('webhooks.stripe');
 
 Route::get('companies/{company}', [CompanyController::class, 'show'])->name('companies.show');

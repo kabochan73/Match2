@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\JobPostingStatus;
+use App\Models\Company;
 use App\Models\JobPosting;
 use Illuminate\Validation\ValidationException;
 
@@ -12,9 +13,9 @@ class JobPostingService
 
     public function publish(JobPosting $jobPosting): JobPosting
     {
-        if ($jobPosting->status !== JobPostingStatus::Draft) {
+        if (! in_array($jobPosting->status, [JobPostingStatus::Draft, JobPostingStatus::Unpublished], true)) {
             throw ValidationException::withMessages([
-                'status' => '下書き状態の求人のみ公開できます。',
+                'status' => '下書きまたは非公開状態の求人のみ公開できます。',
             ]);
         }
 
@@ -26,6 +27,17 @@ class JobPostingService
         $this->revalidationService->jobPosting($jobPosting);
 
         return $jobPosting;
+    }
+
+    public function unpublishAllForCompany(Company $company): void
+    {
+        $company->jobPostings()
+            ->where('status', JobPostingStatus::Published)
+            ->each(function (JobPosting $jobPosting): void {
+                $jobPosting->update(['status' => JobPostingStatus::Unpublished]);
+
+                $this->revalidationService->jobPosting($jobPosting);
+            });
     }
 
     public function close(JobPosting $jobPosting): JobPosting

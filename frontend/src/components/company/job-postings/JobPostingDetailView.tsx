@@ -97,8 +97,18 @@ export function JobPostingDetailView() {
           </section>
         )}
 
+        {jobPosting.status === "unpublished" && (
+          <p className="text-sm text-red-600">
+            決済に失敗したため非公開になっています。
+            <Link href="/companies/billing" className="underline">
+              お支払いページ
+            </Link>
+            で支払い方法を更新すると、再公開できるようになります。
+          </p>
+        )}
+
         <div className="flex gap-2">
-          {jobPosting.status === "draft" && (
+          {(jobPosting.status === "draft" || jobPosting.status === "unpublished") && (
             <button
               type="button"
               onClick={() => publishMutation.mutate()}

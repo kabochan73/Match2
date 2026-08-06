@@ -194,6 +194,23 @@ export type AppNotification = {
   created_at: string;
 };
 
+export type BillingStatus = "unregistered" | "active" | "past_due";
+
+export type PaymentStatus = "paid" | "failed" | "pending";
+
+export type Payment = {
+  id: number;
+  amount: number;
+  status: PaymentStatus;
+  paid_at: string | null;
+  created_at: string;
+};
+
+export type Billing = {
+  status: BillingStatus;
+  payments: Payment[];
+};
+
 export type PaginatedResponse<T> = {
   data: T[];
   links: {

@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "/companies/likes", label: "いいね一覧" },
   { href: "/companies/messages", label: "メッセージ" },
   { href: "/companies/profile", label: "企業プロフィール" },
+  { href: "/companies/billing", label: "お支払い" },
 ];
 
 export function Header() {
