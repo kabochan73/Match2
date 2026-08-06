@@ -14,7 +14,7 @@ export function JobCard({ jobPosting }: { jobPosting: JobPosting }) {
       className="flex w-full flex-col gap-2 rounded border p-4 transition-transform hover:-translate-y-1 hover:border-brand hover:shadow-md"
     >
       <h3 className="font-bold text-2xl">{jobPosting.title}</h3>
-      <p className="text-xl text-gray-600 font-bold">{jobPosting.company.name}</p>
+      <p className="text-md text-gray-600 font-medium">{jobPosting.company.name}</p>
       <div className="flex flex-wrap gap-2 text-sm text-gray-800">
         <span className="bg-sky-200 px-2 py-0.5 font-medium">
           {jobPosting.prefecture}

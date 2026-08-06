@@ -30,8 +30,8 @@ export function ApplySection({ jobPostingId }: { jobPostingId: number }) {
 
   if (!user) {
     return (
-      <div className="rounded border p-4 text-sm">
-        <Link href="/login" className="text-blue-600 underline">
+      <div className="flex justify-end p-4 text-sm">
+        <Link href="/login" className="text-brand border border-brand font-bold text-sm p-2 hover:text-sky-600">
           ログインして応募する
         </Link>
       </div>
@@ -50,13 +50,15 @@ export function ApplySection({ jobPostingId }: { jobPostingId: number }) {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setIsModalOpen(true)}
-        className="w-fit rounded bg-black px-4 py-2 text-sm text-white"
-      >
-        この求人に応募する
-      </button>
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+          className="w-fit rounded bg-brand px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600"
+        >
+          この求人に応募する
+        </button>
+      </div>
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <ApplyForm
           remaining={remaining}

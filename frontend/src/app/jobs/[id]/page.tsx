@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JobsHeader } from "@/components/jobs/JobsHeader";
 import { ApplySection } from "@/components/jobs/ApplySection";
@@ -37,12 +38,21 @@ export default async function JobPostingPage({
       <main className="flex w-full flex-1 flex-col items-center px-6 py-10">
         <article className="flex w-full max-w-2xl flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <p className="text-sm text-gray-500">{jobPosting.company.name}</p>
-            <h1 className="text-2xl font-semibold">{jobPosting.title}</h1>
-            <div className="flex gap-3 text-sm text-gray-600">
-              <span>{jobPosting.prefecture}</span>
-              <span>{EMPLOYMENT_TYPE_LABELS[jobPosting.employment_type]}</span>
-              <span>{formatSalaryRange(jobPosting.salary_min, jobPosting.salary_max)}</span>
+            <h1 className="text-4xl font-semibold">{jobPosting.title}</h1>
+            <Link
+              href={`/companies/${jobPosting.company.id}`}
+              className="text-2xl font-bold text-gray-600 hover:text-brand hover:underline"
+            >
+              {jobPosting.company.name}
+            </Link>
+            <div className="flex flex-wrap gap-2 text-sm text-gray-800">
+              <span className="bg-sky-200 px-2 py-0.5 font-medium">{jobPosting.prefecture}</span>
+              <span className="bg-sky-200 px-2 py-0.5 font-medium">
+                {EMPLOYMENT_TYPE_LABELS[jobPosting.employment_type]}
+              </span>
+              <span className="bg-sky-200 px-2 py-0.5 font-medium">
+                {formatSalaryRange(jobPosting.salary_min, jobPosting.salary_max)}
+              </span>
             </div>
           </div>
 
