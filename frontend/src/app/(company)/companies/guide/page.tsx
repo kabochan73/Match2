@@ -34,7 +34,7 @@ export default function CompanyGuidePage() {
       <section className="flex w-full max-w-3xl flex-col items-center gap-6 px-6 py-20 text-center">
         <h1 className="text-3xl font-bold">企業の方の使い方</h1>
         <p className="text-gray-600">
-          Match Portfolioでは、求職者のポートフォリオを見ながら「いいね」を送るだけで、気になる人材とマッチングできます。
+          Tech Matchでは、求職者のポートフォリオを見ながら「いいね」を送るだけで、気になる人材とマッチングできます。
         </p>
       </section>
 

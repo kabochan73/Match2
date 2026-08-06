@@ -15,7 +15,7 @@ export function Header() {
   return (
     <header className="flex w-full items-center justify-between border-b px-6 py-4">
       <Link href="/companies/job-postings" className="text-lg font-semibold">
-        Match Portfolio
+        Tech Match
       </Link>
 
       <nav className="flex items-center gap-6 text-sm">
