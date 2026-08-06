@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Match Portfolio",
-  description: "ポートフォリオで企業とマッチングする求人サービス",
+  title: "Tech Match",
+  description: "Tech Matchは、ITエンジニア・デザイナーのための求人マッチングサービスです。プロフィールを登録して、気になる求人に「いいね」を送るだけで、企業とマッチングできます。",
 };
 
 export default function RootLayout({
